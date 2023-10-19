@@ -5,6 +5,8 @@ import jb from "../images/logoJB.png"
 const FormLogin = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false)
+
 
     // handle untuk mengambil nilai username
     const handleOnChangeUsername = (e) => {
@@ -17,6 +19,11 @@ const FormLogin = () => {
         const value = e.target.value
         setPassword(value)
     }
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword)
+    }
+
 
     return (
         <section className="relative">
@@ -46,9 +53,9 @@ const FormLogin = () => {
                                     </svg>
                                 </span>
                                 {/* inputan username */}
-                                <div class="relative z-0 w-96">
-                                    <input type="text" id="default_standard" class="block py-2.5 px-3 w-full  text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " value={username} onChange={handleOnChangeUsername} />
-                                    <label for="default_standard" class="absolute px-3 text-gray-500 dark:text-gray-800 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Username</label>
+                                <div className="relative z-0 w-96">
+                                    <input type="text" id="default_standard" className="block py-2.5 px-3 w-full  text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="" onChange={handleOnChangeUsername} value={username} />
+                                    <label htmlFor="default_standard" className="absolute px-3 text-gray-500 dark:text-gray-800 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Username</label>
                                 </div>
                             </div>
 
@@ -61,10 +68,31 @@ const FormLogin = () => {
                                     </svg>
                                 </span>
                                 {/* inputan password */}
-                                <div class="relative z-0 w-96">
-                                    <input type="password" id="default_standard" class="block py-2.5 px-3 w-full  text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " value={password} onChange={handleOnChangePassword} />
-                                    <label for="default_standard" class="absolute px-3 text-gray-500 dark:text-gray-800 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Password</label>
+                                <div className="relative z-0 w-96">
+                                    <input type={showPassword ? "text" : "password"} id="default_standard" className="block py-2.5 px-3 w-full  text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " onChange={handleOnChangePassword} value={password} />
+                                    <label htmlFor="default_standard" className="absolute px-3 text-gray-500 dark:text-gray-800 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Password</label>
+                                    {/* logic dimana jika password ada value maka akan muncul icon mata */}
+                                    {password && (
+                                        <span className="absolute top-3 right-3 cursor-pointer" onClick={togglePasswordVisibility}>
+                                            {showPassword ? (
+                                                <svg className="w-6 h-6 text-gray-500 dark:text-black" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 14">
+                                                    <g stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={0.9}>
+                                                        <path d="M10 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                                                        <path d="M10 13c4.97 0 9-2.686 9-6s-4.03-6-9-6-9 2.686-9 6 4.03 6 9 6Z" />
+                                                    </g>
+                                                </svg>
+
+                                            ) : (
+                                                <svg className="w-6 h-6 text-gray-500 dark:text-black" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 18">
+                                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={0.9} d="M1.933 10.909A4.357 4.357 0 0 1 1 9c0-1 4-6 9-6m7.6 3.8A5.068 5.068 0 0 1 19 9c0 1-3 6-9 6-.314 0-.62-.014-.918-.04M2 17 18 1m-5 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                                </svg>
+                                            )}
+                                        </span>
+                                    )}
                                 </div>
+
+
+
                             </div>
                             {/* bagian atas remember dan forget */}
                             <div className="flex items-center justify-between">
@@ -72,7 +100,7 @@ const FormLogin = () => {
                                 <div className="flex items-start">
                                     {/* cek listv (centang) remember me */}
                                     <div className="flex items-center h-5">
-                                        <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" required />
+                                        <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" />
                                     </div>
                                     {/* tulisan remember me */}
                                     <div className="ml-3 text-sm">

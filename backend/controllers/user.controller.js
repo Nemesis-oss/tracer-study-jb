@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+// mengatur tentang daftar
 export const UserRegister = async (req, res) => {
   const {
     nama,
@@ -55,7 +56,7 @@ export const UserRegister = async (req, res) => {
   const cekUsername = await User.findOne({ username: username });
   if (cekUsername) {
     return res.status(401).json({
-      messege: "Username sudah ada",
+      messege: "Username sudah terdaftar",
     });
   }
 
@@ -70,10 +71,11 @@ export const UserRegister = async (req, res) => {
   user.save();
 
   return res.status(201).json({
-    message: "data berhasil ditambahkan",
+    message: "akun berhasil dibuat!",
   });
 };
 
+// mengatur tentang login
 export const UserLogin = async (req, res) => {
   const { username, password } = req.body;
 
@@ -91,14 +93,18 @@ export const UserLogin = async (req, res) => {
       const token = await jsonwebtoken.sign(data, process.env.JWT_SECRET);
 
       return res.status(200).json({
-        message: "data ditemuka!",
+        message: "akun berhasil login!",
         dataUser: dataUser,
         token: token,
       });
+    } else {
+      return res.status(403).json({
+        message: "password tidak ditemukan",
+      });
     }
   } else {
-    return res.status(404).json({
-      message: "data tidak ditemukan",
+    return res.status(403).json({
+      message: "Username atau email tidak ditemukan",
     });
   }
 };

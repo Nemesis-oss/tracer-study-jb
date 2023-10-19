@@ -24,6 +24,10 @@ app.use(bodyParser.json());
 app.use(routerUser);
 app.use(routerIjazah);
 app.use(cors());
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: "Terjadi kesalahan dalam server." });
+});
 
 // mengecek apakah server berjalan tidak
 app.listen(process.env.PORT, () => console.log("Server port 5000 Berjalan.."));
