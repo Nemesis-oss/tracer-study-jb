@@ -6,9 +6,8 @@ const FormLogin = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
+    const [rememberMe, setRememberMe] = useState(false);
 
-
-    // handle untuk mengambil nilai username
     const handleOnChangeUsername = (e) => {
         const value = e.target.value
         setUsername(value)
@@ -22,6 +21,10 @@ const FormLogin = () => {
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword)
+    }
+
+    const handleRememberMe = () => {
+        setRememberMe(!rememberMe)
     }
 
 
@@ -90,17 +93,14 @@ const FormLogin = () => {
                                         </span>
                                     )}
                                 </div>
-
-
-
                             </div>
                             {/* bagian atas remember dan forget */}
                             <div className="flex items-center justify-between">
                                 {/* bagian atas remember me */}
                                 <div className="flex items-start">
-                                    {/* cek listv (centang) remember me */}
+                                    {/* cek list (centang) remember me */}
                                     <div className="flex items-center h-5">
-                                        <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" />
+                                        <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" onChange={handleRememberMe} checked={rememberMe}/>
                                     </div>
                                     {/* tulisan remember me */}
                                     <div className="ml-3 text-sm">
