@@ -1,7 +1,6 @@
-import { React, useState} from "react";
-import { Link, useNavigate } from "react-router-dom"
-import jb from "../../images/logoJB.png"
-import api from "../../api.js";
+import { React, useState } from "react";
+import { Link } from "react-router-dom"
+import jb from "../images/logoJB.png"
 
 const FormLogin = () => {
     const [username, setUsername] = useState('')
