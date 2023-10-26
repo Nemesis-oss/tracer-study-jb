@@ -20,10 +20,17 @@ db.on("error", (error) => console.log(error));
 db.once("open", () => console.log("Terkoneksi Data Base..."));
 // db.createCollection("coba2")
 
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  })
+);
 app.use(bodyParser.json());
 app.use(routerUser);
 app.use(routerIjazah);
-app.use(cors());
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: "Terjadi kesalahan dalam server." });

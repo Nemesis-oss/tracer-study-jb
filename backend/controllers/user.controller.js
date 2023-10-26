@@ -32,6 +32,7 @@ export const UserRegister = async (req, res) => {
     nomor_WA: nomor_WA,
     username: username,
     password: hashPassword,
+    role:"user"
   });
 
   // mengecek apakah nomor ijazah ada di db
@@ -40,7 +41,7 @@ export const UserRegister = async (req, res) => {
   });
   if (!nomorIjazahDB) {
     return res.status(400).json({
-      messege: "nomor ijazah anda tidak ditemukan",
+      message: "Nomor ijazah anda tidak ditemukan",
     });
   }
 
@@ -48,7 +49,7 @@ export const UserRegister = async (req, res) => {
   const cekNoIjazah = await User.findOne({ nomor_ijazah: nomor_ijazah });
   if (cekNoIjazah) {
     return res.status(404).json({
-      messege: "Nomor Ijazah sudah terdaftar",
+      message: "Nomor Ijazah sudah terdaftar",
     });
   }
 
@@ -56,7 +57,7 @@ export const UserRegister = async (req, res) => {
   const cekUsername = await User.findOne({ username: username });
   if (cekUsername) {
     return res.status(401).json({
-      messege: "Username sudah terdaftar",
+      message: "Username sudah terdaftar",
     });
   }
 
@@ -64,14 +65,14 @@ export const UserRegister = async (req, res) => {
   const cekEmail = await User.findOne({ email: email });
   if (cekEmail) {
     return res.status(402).json({
-      messege: "email sudah terdaftar",
+      message: "Email sudah terdaftar",
     });
   }
 
   user.save();
 
   return res.status(201).json({
-    message: "akun berhasil dibuat!",
+    message: "Akun berhasil dibuat!",
   });
 };
 
@@ -93,13 +94,13 @@ export const UserLogin = async (req, res) => {
       const token = await jsonwebtoken.sign(data, process.env.JWT_SECRET);
 
       return res.status(200).json({
-        message: "akun berhasil login!",
+        message: "Akun berhasil login!",
         dataUser: dataUser,
         token: token,
       });
     } else {
       return res.status(403).json({
-        message: "password tidak ditemukan",
+        message: "Password tidak ditemukan",
       });
     }
   } else {
@@ -107,4 +108,13 @@ export const UserLogin = async (req, res) => {
       message: "Username atau email tidak ditemukan",
     });
   }
+};
+
+export const getSingleUser = async (req, res) => {
+  console.log(req.id);
+  const user = await User.findOne({ _id: req.id });
+  return res.status(200).json({
+    message: "Berhasil di panggil",
+    data: user,
+  });
 };
