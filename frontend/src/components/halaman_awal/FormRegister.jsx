@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
-import jb from '../images/logoJB.png'
-import api from "../api.js"
+import jb from '../../images/logoJB.png'
+import api from "../../api.js"
+import { Link } from 'react-router-dom'
+
 // import axios from "axios"
 
 const FormRegister = () => {
