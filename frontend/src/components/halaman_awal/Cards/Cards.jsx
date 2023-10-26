@@ -1,5 +1,5 @@
 import React from "react";
-import img4 from "../../images/img-2.png";
+import img4 from "../../../images/img-2.png";
 
 const Cards = () => {
   return (

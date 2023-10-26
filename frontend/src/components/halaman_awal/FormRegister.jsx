@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import jb from '../images/logoJB.png'
+import jb from '../../images/logoJB.png'
 
 const FormRegister = () => {
   const [name, setName] = useState('')
