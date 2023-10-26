@@ -1,12 +1,14 @@
-import { React, useState } from "react";
-import { Link } from "react-router-dom"
-import jb from "../images/logoJB.png"
+import { React, useState} from "react";
+import { Link, useNavigate } from "react-router-dom"
+import jb from "../../images/logoJB.png"
+import api from "../../api.js";
 
 const FormLogin = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
     const [rememberMe, setRememberMe] = useState(false);
+    const navigate = useNavigate()
 
     const handleOnChangeUsername = (e) => {
         const value = e.target.value
@@ -27,6 +29,31 @@ const FormLogin = () => {
         setRememberMe(!rememberMe)
     }
 
+    const resetForm = () => {
+        setUsername('')
+        setPassword('')
+    }
+
+    const handleClickLogin = async (e) => {
+        e.preventDefault()
+
+
+        const data = {
+            username: username,
+            password: password
+        }
+
+        resetForm()
+        try {
+            const response = await api.post('/login', data)
+            if (response) {
+                localStorage.setItem('token', response.data.token)
+                navigate('/user');
+            }
+        } catch (error) {
+
+        }
+    }
 
     return (
         <section className="relative">
@@ -72,7 +99,7 @@ const FormLogin = () => {
                                 </span>
                                 {/* inputan password */}
                                 <div className="relative z-0 w-96">
-                                    <input type={showPassword ? "text" : "password"} id="default_standard" className="block py-2.5 px-3 w-full  text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " onChange={handleOnChangePassword} value={password} />
+                                    <input type={showPassword ? "text" : "password"} id="default_standard" className="block py-2.5 px-3 w-full  text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="" onChange={handleOnChangePassword} value={password} />
                                     <label htmlFor="default_standard" className="absolute px-3 text-gray-500 dark:text-gray-800 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Password</label>
                                     {/* logic dimana jika password ada value maka akan muncul icon mata */}
                                     {password && (
@@ -100,7 +127,7 @@ const FormLogin = () => {
                                 <div className="flex items-start">
                                     {/* cek list (centang) remember me */}
                                     <div className="flex items-center h-5">
-                                        <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" onChange={handleRememberMe} checked={rememberMe}/>
+                                        <input id="remember" aria-describedby="remember" type="checkbox" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" onChange={handleRememberMe} checked={rememberMe} />
                                     </div>
                                     {/* tulisan remember me */}
                                     <div className="ml-3 text-sm">
@@ -113,7 +140,7 @@ const FormLogin = () => {
                             {/* bagian button login dan back */}
                             <div className="flex gap-2">
                                 {/* button login */}
-                                <button type="submit" className="w-full text-white hover:bg-white-700 focus:ring-4 focus:outline-none focus:ring-gray-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-400 hover:dark:text-black">Login</button>
+                                <button type="submit" onClick={handleClickLogin} className="w-full text-white hover:bg-white-700 focus:ring-4 focus:outline-none focus:ring-gray-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-400 hover:dark:text-black">Login</button>
                                 {/* login back */}
                                 <Link to="/" className="w-full text-white hover:bg-white-700 focus:ring-4 focus:outline-none focus:ring-gray-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-400 hover:dark:text-black">
                                     <button type="submit" >Back</button>

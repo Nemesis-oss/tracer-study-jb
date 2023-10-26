@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import jb from '../images/logoJB.png'
-import api from "../api.js"
+import { Link } from "react-router-dom"
+import jb from '../../images/logoJB.png'
+import api from "../../api.js"
 // import axios from "axios"
 
 const FormRegister = () => {
@@ -295,10 +296,15 @@ const FormRegister = () => {
                 </div>
               </div>
               {/* {/* button regis */}
+              <div className='flex gap-2'>
               <button type='submit' className={`${!agreed ? 'w-full font-medium cursor-not-allowed bg-gray-300 rounded-lg text-sm px-5 py-2.5 text-center' :
                 'w-full text-white hover:bg-white-700 focus:ring-4 focus:outline-none focus:ring-gray-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-400 hover:dark:text-black'
-                }`} onClick={handleClickRegis} disabled={!agreed || passwordMatchError} >Register</button>
-              {/* kembali ligin */}
+              }`} onClick={handleClickRegis} disabled={!agreed || passwordMatchError} >Register</button>
+              <Link to="/" className="w-full text-white hover:bg-white-700 focus:ring-4 focus:outline-none focus:ring-gray-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-400 hover:dark:text-black">
+                <button type="submit" >Back</button>
+              </Link>
+              </div>
+              {/* kembali ligon */}
               <p className="text-sm font-light text-gray-700 dark:text-gray-700">
                 Already have an account? <a href="/login" className="font-medium text-primary-600 hover:underline dark:text-primary-500" >Login</a>
               </p>

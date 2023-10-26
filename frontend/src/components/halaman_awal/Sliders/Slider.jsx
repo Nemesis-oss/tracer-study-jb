@@ -1,7 +1,7 @@
 import React from "react";
-import img1 from "../../images/back1.png";
-import img3 from "../../images/back3.png";
-import img4 from "../../images/back4.png";
+import img1 from "../../../images/back1.png";
+import img3 from "../../../images/back3.png";
+import img4 from "../../../images/back4.png";
 import { Carousel } from "flowbite-react";
 import Typewriter from "../Typewriter/Typewriter";
 
