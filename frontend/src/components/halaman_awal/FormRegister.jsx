@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import jb from '../images/logoJB.png'
-import api from "../api.js"
-// import axios from "axios"
+import jb from '../../images/logoJB.png'
+import api from "../../api.js"
+import { Link } from 'react-router-dom'
 
 const FormRegister = () => {
   const [nama, setNama] = useState('')
@@ -137,9 +137,19 @@ const FormRegister = () => {
       username: username,
       password: password
     }
+
+    if (password !== konfrmPassword) {
+      setPasswordMatchError(true);
+      setError("Password dan Konfirmasi password harus sama!");
+      setTimeout(() => {
+        setError('')
+      },5000)
+      return;
+    }
+
+
     try {
       const response = await api.post("/daftar", data)
-      console.log("berhasil", response.data)
       resetForm()
       setAlert(response.data.message)
     } catch (error) {
@@ -147,10 +157,10 @@ const FormRegister = () => {
     } finally {
       setTimeout(() => {
         setAlert('')
+        setError('')
       }, 5000)
     }
   }
-
 
 
   return (
@@ -178,7 +188,7 @@ const FormRegister = () => {
         {/* tulisan de brito */}
         <a href="/" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
           <img className="w-8 h-8 mr-2" src={jb} alt="logo" />
-          SMA Kolose De Britto
+          SMA Kolese De Britto
         </a>
         {/* isi form (card) */}
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0">
@@ -280,7 +290,7 @@ const FormRegister = () => {
                 )}
                 {passwordMatchError && (
                   <p className="text-sm text-red-500">
-                    Konfirmasi kata sandi tidak cocok dengan kata sandi.
+                    Konfirmasi password tidak cocok dengan password.
                   </p>
                 )}
               </div>
@@ -298,7 +308,7 @@ const FormRegister = () => {
               <div className='flex gap-2'>
               <button type='submit' className={`${!agreed ? 'w-full font-medium cursor-not-allowed bg-gray-300 rounded-lg text-sm px-5 py-2.5 text-center' :
                 'w-full text-white hover:bg-white-700 focus:ring-4 focus:outline-none focus:ring-gray-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-400 hover:dark:text-black'
-              }`} onClick={handleClickRegis} disabled={!agreed || passwordMatchError} >Register</button>
+              }`} onClick={handleClickRegis} disabled={!agreed } >Register</button>
               <Link to="/" className="w-full text-white hover:bg-white-700 focus:ring-4 focus:outline-none focus:ring-gray-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-400 hover:dark:text-black">
                 <button type="submit" >Back</button>
               </Link>

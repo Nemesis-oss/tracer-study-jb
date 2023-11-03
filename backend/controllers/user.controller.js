@@ -3,6 +3,7 @@ import noIjazahModels from "../models/no.ijazah.models.js";
 import bcryptjs from "bcryptjs";
 import jsonwebtoken from "jsonwebtoken";
 import dotenv from "dotenv";
+import { kirimEmail } from "../helpers/index.js";
 
 dotenv.config();
 
@@ -32,7 +33,7 @@ export const UserRegister = async (req, res) => {
     nomor_WA: nomor_WA,
     username: username,
     password: hashPassword,
-    role:"user"
+    role: "user",
   });
 
   // mengecek apakah nomor ijazah ada di db
@@ -110,11 +111,134 @@ export const UserLogin = async (req, res) => {
   }
 };
 
-export const getSingleUser = async (req, res) => {
-  console.log(req.id);
+export const forgetPassword = async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email: email });
+  if (!user) {
+    return res.status(400).json({
+      status: false,
+      message: "Email tidak ditemukan!",
+    });
+  }
+
+  const token = jsonwebtoken.sign(
+    {
+      iduser: user._id,
+    },
+    process.env.JWT_SECRET
+  );
+
+  await user.updateOne({ resetPasswordLink: token });
+
+  const tamplateEmail = {
+    from: "De Britto Kolose",
+    to: email,
+    subject: "Link reset password",
+    html: `<p>silahkan klik link dibawah untuk reset password anda!</p> <a href="${process.env.CLIENT_URL}/reset-password/${token}"><button">Reset Password</button></a>`,
+  };
+
+  if (isValidToken(token)) {
+    kirimEmail(tamplateEmail);
+    return res.status(200).json({
+      status: true,
+      message: "Link reset password berhasil terkirim",
+      // data: user,
+    });
+  } else {
+    return res.status(401).json({
+      status: false,
+      message: "Gagal mengirim link reset password",
+    });
+  }
+};
+const isValidToken = (token) => {
+  try {
+    jsonwebtoken.verify(token, process.env.JWT_SECRET);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  const { token, password } = req.body;
+  const user = await User.findOne({ resetPasswordLink: token });
+
+  if (user) {
+    const hashPassword = await bcryptjs.hash(password, 10);
+    user.password = hashPassword;
+    await user.save();
+    return res.status(201).json({
+      status: true,
+      message: "Password berhasil diganti",
+    });
+  }
+};
+
+export const getUsers = async (req, res) => {
+  try {
+    const user = await User.find();
+    res.json({
+      data: user,
+      message: "Berhasil dipanggil semua",
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: false,
+      message: error.message,
+    });
+  }
+};
+
+export const getSingleUsers = async (req, res) => {
   const user = await User.findOne({ _id: req.id });
   return res.status(200).json({
-    message: "Berhasil di panggil",
+    message: "berhasil di panggil",
     data: user,
   });
+};
+
+export const updateUser = async (req, res) => {
+  try {
+    const token = req.headers.authorization;
+
+    if (!token) {
+      return res.status(401).json({ message: "Token tidak ditemukan" });
+    }
+    const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
+
+    if (req.body.password) {
+      req.body.password = await bcryptjs.hash(req.body.password, 10);
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(decoded.id, req.body, {
+      new: true,
+    });
+
+    if (!updatedUser) {
+      return res
+        .status(404)
+        .json({ message: `User dengan id ${decoded.id} tidak ditemukan` });
+    }
+    res.status(200).json({
+      message: "Profile data berhasil diupdate",
+      data: updatedUser,
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+export const deleteUser = async (req, res) => {
+  try {
+    const deleteUser = await User.deleteOne({
+      _id: req.params.id,
+    });
+    res.status(200).json({
+      message: "Data berhasil di hapus",
+      data: deleteUser,
+    });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 };
