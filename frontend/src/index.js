@@ -2,7 +2,15 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./styles/index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Bantuan, HalamanAwal, Login, NotFound, Registrasi } from "./route";
+import {
+  AdminHome,
+  Bantuan,
+  HalamanAwal,
+  Login,
+  NotFound,
+  Registrasi,
+  UserHome,
+} from "./route";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +29,16 @@ const router = createBrowserRouter([
     path: "/bantuan",
     element: <Bantuan />,
   },
+  {
+    path: "/user",
+    element: <UserHome />,
+  },
+
+  {
+    path : "/admin",
+    element: <AdminHome />
+  },
+
   { path: "*", element: <NotFound /> },
 ]);
 
