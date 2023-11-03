@@ -37,6 +37,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  resetPasswordLink: {
+    type: String,
+    default: "",
+  },
   role: {
     type: String,
     enum: ["admin", "user"],

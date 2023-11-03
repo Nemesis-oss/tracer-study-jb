@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { Fragment, React, useState } from "react";
 import { Link } from "react-router-dom"
 import jb from "../../images/logoJB.png"
 import { useNavigate } from "react-router-dom";
@@ -9,17 +9,21 @@ const FormLogin = () => {
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
     const [rememberMe, setRememberMe] = useState(false);
+    const [redirect, setRedirect] = useState(false)
+    const [error, setError] = useState('')
     const navigate = useNavigate()
 
     const handleOnChangeUsername = (e) => {
         const value = e.target.value
         setUsername(value)
+        setError('')
     }
 
     // handle untuk mengambil nilai password
     const handleOnChangePassword = (e) => {
         const value = e.target.value
         setPassword(value)
+        setError('')
     }
 
     const togglePasswordVisibility = () => {
@@ -44,15 +48,15 @@ const FormLogin = () => {
             password: password
         }
 
-        resetForm()
         try {
             const response = await api.post('/login', data)
             if (response) {
                 localStorage.setItem('token', response.data.token)
-                navigate('/user');
+                resetForm()
+                navigate('/user')
             }
         } catch (error) {
-
+            setError(error.response.data.message)
         }
     }
 
@@ -62,10 +66,18 @@ const FormLogin = () => {
             <div className="absolute inset-0 bg-cover bg-center bg-[url('../images/back3.png')] brightness-50"> </div>
             {/* isi konten */}
             <div className="flex flex-col items-center justify-center px-2 py-10 md:h-screen brightness-100 relative z-10 h-[100vh]">
+                {error && (
+                    <div className="fixed top-0 h-16 inset-0 flex items-center p-4 mb-4 text-sm text-red-900 border border-red-500 rounded-lg bg-red-50  dark:text-red-600 dark:border-red-900" role="alert">
+                        <svg className="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                        </svg>
+                        {error}
+                    </div>
+                )}
                 {/* Tulisan SMA Kolose */}
                 <a href="/" className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
                     <img className="w-8 h-8 mr-2" src={jb} alt="logo" />
-                    SMA Kolose De Britto
+                    SMA Kolese De Britto
                 </a>
                 {/* isi konten (card form login) */}
                 <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0">
@@ -85,7 +97,7 @@ const FormLogin = () => {
                                 </span>
                                 {/* inputan username */}
                                 <div className="relative z-0 w-96">
-                                    <input type="text" id="default_standard" className="block py-2.5 px-3 w-full  text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="" onChange={handleOnChangeUsername} value={username} />
+                                    <input type="text" className="block py-2.5 px-3 w-full  text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="" onChange={handleOnChangeUsername} value={username} />
                                     <label htmlFor="default_standard" className="absolute px-3 text-gray-500 dark:text-gray-800 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Username</label>
                                 </div>
                             </div>
@@ -100,7 +112,7 @@ const FormLogin = () => {
                                 </span>
                                 {/* inputan password */}
                                 <div className="relative z-0 w-96">
-                                    <input type={showPassword ? "text" : "password"} id="default_standard" className="block py-2.5 px-3 w-full  text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="" onChange={handleOnChangePassword} value={password} />
+                                    <input type={showPassword ? "text" : "password"} className="block py-2.5 px-3 w-full  text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="" onChange={handleOnChangePassword} value={password} />
                                     <label htmlFor="default_standard" className="absolute px-3 text-gray-500 dark:text-gray-800 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Password</label>
                                     {/* logic dimana jika password ada value maka akan muncul icon mata */}
                                     {password && (
@@ -136,7 +148,7 @@ const FormLogin = () => {
                                     </div>
                                 </div>
                                 {/* tulisan forget password */}
-                                <a href="#" className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
+                                <a href="/lupa-password" className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">Forgot password?</a>
                             </div>
                             {/* bagian button login dan back */}
                             <div className="flex gap-2">
@@ -158,6 +170,7 @@ const FormLogin = () => {
                 </div>
             </div>
         </section>
+
     )
 }
 

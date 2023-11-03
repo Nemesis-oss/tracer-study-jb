@@ -5,7 +5,6 @@ dotenv.config();
 
 export default async (req, res, next) => {
   const token = req.header("Authorization");
-
   if (!token) {
     return res.status(401).json({
       message: "tidak ada token",

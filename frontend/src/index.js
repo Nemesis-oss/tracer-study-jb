@@ -5,10 +5,18 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import {
   Bantuan,
   HalamanAwal,
+  Kerja,
+  KerjaKuliah,
+  Kuliah,
   Login,
+  LupaPassword,
+  MencariKerja,
   NotFound,
+  Profile,
   Registrasi,
+  Usaha,
   UserHome,
+  ResetPassword
 } from "./route";
 
 const router = createBrowserRouter([
@@ -25,6 +33,14 @@ const router = createBrowserRouter([
     element: <Registrasi />,
   },
   {
+    path: "/lupa-password",
+    element: <LupaPassword />,
+  },
+  {
+    path: "/reset-password/:token",
+    element:<ResetPassword/>
+  },
+  {
     path: "/bantuan",
     element: <Bantuan />,
   },
@@ -32,6 +48,31 @@ const router = createBrowserRouter([
     path: "/user",
     element: <UserHome />,
   },
+  {
+    path: "/user/profile",
+    element: <Profile />,
+  },
+  {
+    path: "/user/kuliah",
+    element: <Kuliah />,
+  },
+  {
+    path: "/user/kuliah-kerja",
+    element: <KerjaKuliah />,
+  },
+  {
+    path: "/user/kerja",
+    element: <Kerja />,
+  },
+  {
+    path: "/user/mencari-kerja",
+    element: <MencariKerja />,
+  },
+  {
+    path: "/user/usaha",
+    element: <Usaha />,
+  },
+  
 
   { path: "*", element: <NotFound /> },
 ]);
