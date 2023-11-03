@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import logo from "../../../images/logoJB.png";
+
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -9,15 +10,15 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 bg-gradient-to-r to-transparent z-30 transition-all duration-300 ease-in-out brightness ${
-        isMenuOpen ? "md:bg-transparent" : ""
+      className={`fixed top-0 left-0 right-0 z-30 transition-all duration-300 ease-in-out ${
+        isMenuOpen ? "bg-black bg-opacity-70" : "bg-black bg-opacity-70 "
       }`}
     >
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <a href="#" className="flex items-center">
+      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 ">
+        <a href="/" className="flex items-center">
           <img src={logo} className="h-8 mr-3" alt="" />
           <span className="self-center font-semibold whitespace-nowrap dark:text-white block py-2 pl-3 pr-4 text-gray-900 rounded hover:text-blue-700 md:border-0 md:hover-text-blue-700 md:p-0 dark:text-white md:dark:hover-text-blue-500 dark:hover-bg-gray-700">
-            SMA KOLOSE DE BRITTO
+            SMA KOLESE DE BRITTO
           </span>
         </a>
         <button
@@ -72,7 +73,7 @@ const Navbar = () => {
             <li>
               <a
                 href="/registrasi"
-                className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:text-blue-700 md:border-0 md:hover-text-blue-700 md:p-0 dark:text-white md:dark:hover-text-blue-500 dark:hover-bg-gray-700"
+                className="block py-2 pl-3 pr-4 text-gray-900 rounded hover-text-blue-700 md:border-0 md:hover-text-blue-700 md:p-0 dark:text-white md:dark:hover-text-blue-500 dark:hover-bg-gray-700"
               >
                 REGISTRASI
               </a>
@@ -80,7 +81,7 @@ const Navbar = () => {
             <li>
               <a
                 href="/bantuan"
-                className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:text-blue-700 md:border-0 md:hover-text-blue-700 md:p-0 dark:text-white md:dark:hover-text-blue-500 dark:hover-bg-gray-700  "
+                className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:text-blue-700 md:border-0 md:hover-text-blue-700 md:p-0 dark:text-white md:dark:hover-text-blue-500 dark:hover-bg-gray-700"
               >
                 BANTUAN
               </a>

@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./styles/index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import {
+  AdminHome,
   Bantuan,
   HalamanAwal,
   Kerja,
@@ -73,6 +74,11 @@ const router = createBrowserRouter([
     element: <Usaha />,
   },
   
+
+  {
+    path : "/admin",
+    element: <AdminHome />
+  },
 
   { path: "*", element: <NotFound /> },
 ]);
