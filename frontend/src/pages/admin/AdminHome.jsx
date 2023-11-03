@@ -1,10 +1,13 @@
 import React from "react";
-import AdminLayout from "../../components/admin/TestHalamanAdmin";
+import HomeAdmin from "../../components/admin/HomeAdmin";
+// import AdminLayout from "../../components/admin/TestHalamanAdmin";
 
 const AdminHome = () => {
   return (
     <div>
-      <AdminLayout />
+      {/* <AdminLayout /> */}
+      <HomeAdmin/>
+      ini adalah halaman admin
     </div>
   );
 };

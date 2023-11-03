@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./styles/index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import {
-  AdminHome,
+  // AdminHome,
   Bantuan,
   HalamanAwal,
   Kerja,
@@ -17,7 +17,8 @@ import {
   Registrasi,
   Usaha,
   UserHome,
-  ResetPassword
+  ResetPassword,
+  HomeAdmin
 } from "./route";
 
 const router = createBrowserRouter([
@@ -77,7 +78,7 @@ const router = createBrowserRouter([
 
   {
     path : "/admin",
-    element: <AdminHome />
+    element: <HomeAdmin />
   },
 
   { path: "*", element: <NotFound /> },

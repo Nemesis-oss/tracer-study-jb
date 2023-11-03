@@ -13,6 +13,7 @@ import KerjaKuliah from "./pages/user/KerjaKuliah";
 import MencariKerja from "./pages/user/MencariKerja";
 import Usaha from "./pages/user/Usaha"
 import Kuliah from "./pages/user/Kuliah";
+import HomeAdmin from "./components/admin/HomeAdmin";
 
 export {
   HalamanAwal,
@@ -29,6 +30,7 @@ export {
   KerjaKuliah,
   MencariKerja,
   Usaha,
-  Kuliah
+  Kuliah,
+  HomeAdmin
 
 };
