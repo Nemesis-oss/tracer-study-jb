@@ -166,7 +166,7 @@ const FormRegister = () => {
   return (
     <section className="relative">
       {/* gambar background */}
-      <div className="absolute inset-0 bg-cover bg-center bg-[url('../images/back2.png')] brightness-50"> </div>
+      <div className="fixed inset-0 bg-cover bg-center bg-[url('../images/back2.png')] brightness-50"> </div>
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto relative z-10">
         {/* bagian alert berhasil*/}
         {alertt && (

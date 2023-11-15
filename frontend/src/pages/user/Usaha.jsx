@@ -1,19 +1,24 @@
 import { React, useEffect } from 'react'
 import UsahaLayout from '../../components/user/UsahaLayout'
 import { useNavigate } from "react-router-dom"
-import Navbar from '../../components/user/Navbar/Navbar'
+import cookie from "js-cookies"
 
 const Usaha = () => {
   const navigate = useNavigate()
+  const token = cookie.getItem('token')
+  const roles = localStorage.getItem('roles')
 
-  const token = localStorage.getItem('token')
 
   useEffect(() => {
-    const updatedToken = localStorage.getItem('token');
+    const updatedToken = cookie.getItem('token');
+    const updatedRoles = cookie.getItem('roles')
     if (!updatedToken) {
       navigate('/', { replace: true });
     }
-  }, [token, navigate]);
+    if (updatedRoles === "admin") {
+      navigate('/admin')
+    }
+  }, [token, roles, navigate]);
 
 
   return (

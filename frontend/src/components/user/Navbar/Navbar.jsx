@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import jb from "../../../images/logoJB.png";
-import api from "../../../api";
+import { Link, useNavigate} from "react-router-dom";
+import cookie from "js-cookies"
 
 const Navbar = () => {
   const navigator = useNavigate();
@@ -22,8 +21,10 @@ const Navbar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const handleClickLogout = () => {
-    localStorage.removeItem("token");
+  const handleClickLogout = (e) => {
+    e.preventDefault()
+    document.cookie = "roles=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     navigator("/");
   };
 
@@ -61,7 +62,7 @@ const Navbar = () => {
               <li key={index}>
                 <Link
                   to={item.to}
-                  className="text-white rounded-md px-3 py-2 text-sm font-medium transition-colors duration-500"
+                  className="text-white rounded-md px-3 py-2 text-sm font-medium transition-colors duration-500 hover:text-cyan-500"
                 >
                   {item.name}
                 </Link>

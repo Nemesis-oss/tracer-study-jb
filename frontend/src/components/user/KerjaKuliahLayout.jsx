@@ -1,15 +1,20 @@
 import React from 'react'
 import Navbar from './Navbar/Navbar'
+import Banner from './Banner/Banner'
+import img from "../../images/back1.png"
+import TableKuliahKerja from './table/TableKuliahKerja'
+import Footer from './Footer/Footer'
 
 const KerjaKuliahLayout = () => {
     return (
-        <div className='mt-16'>
-            <div >
-                <Navbar />
-            </div>
-            <div>
-                ini adalah halaman kuliah kerja
-            </div>
+        <div >
+            <Navbar />
+            <Banner
+                img={img}
+                Jenis={"Kuliah dan Kerja"}
+            />
+            <TableKuliahKerja/>
+            <Footer/>
         </div>
     )
 }

@@ -16,7 +16,7 @@ const UserLayout = () => {
                 <div className="fixed top-[180px] md:top-52 flex flex-col items-center dark:text-white gap-2">
                     <img src={jb} alt="ini adalah logo" className="text-white w-20 h-20" />
                     <p className="font-bold text-2xl md:text-4xl text-orange-400 text-center">Selamat datang di Sistem Informasi Alumni</p>
-                    <p className="w-[90%] md:w-[60%] text-lg md:text-2xl text-center">Untuk menambahkan data, silahkan mengeklik "Profile" di menu, lalu pilih tombol "Status".</p>
+                    <p className="w-[90%] md:w-[60%] text-xs md:text-2xl text-center">Sistem Informasi Alumni adalah studi tentang lulusan perguruan tinggi, memberikan informasi penting untuk evaluasi pendidikan tinggi dan peningkatan kualitas lembaga. Ini juga memfasilitasi pemahaman hubungan antara pendidikan tinggi dan dunia kerja, menilai relevansi pendidikan, serta menyediakan informasi untuk pemangku kepentingan dan akreditasi pendidikan tinggi.</p>
                 </div>
             </div>
         </div>

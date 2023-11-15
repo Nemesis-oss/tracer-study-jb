@@ -2,7 +2,7 @@ import { React, useEffect, useState } from 'react';
 import DataTable from "react-data-table-component";
 import api from '../../../api';
 
-const TableKuliah = () => {
+const TableKuliahKerja = () => {
     const columns = [
         {
             name: "Nama",
@@ -14,7 +14,28 @@ const TableKuliah = () => {
         {
             name: "Angkatan",
             sortable: true,
-            selector: row => row.angkatan
+            selector: row => row.angkatan,
+            cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.angkatan}</div>,
+
+        },
+        {
+            name: "Nama Perusahaan",
+            sortable: true,
+            selector: row => row.nama_perusahaan,
+            cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.nama_perusahaan}</div>,
+
+        },
+        {
+            name: "Jabatan",
+            sortable: true,
+            selector: row => row.jabatan,
+            cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.jabatan}</div>,
+
+        },
+        {
+            name: "Tahun Kerja",
+            sortable: true,
+            selector: row => row.tahun_kerja
         },
         {
             name: "Universitas",
@@ -49,7 +70,10 @@ const TableKuliah = () => {
                 row.angkatan.toString().toLowerCase().includes(value) ||
                 row.nama_universitas.toLowerCase().includes(value) ||
                 row.prodi.toLowerCase().includes(value) ||
-                row.jenjang.toLowerCase().includes(value)
+                row.jenjang.toLowerCase().includes(value) ||
+                row.nama_perusahaan.toLowerCase().includes(value) ||
+                row.jabatan.toLowerCase().includes(value) ||
+                row.tahun_kerja.toString().toLowerCase().includes(value)
             );
         });
         setFilter(filterData);
@@ -57,10 +81,10 @@ const TableKuliah = () => {
 
     const readAllKuliah = async () => {
         try {
-            const response = await api.get('/kuliah/all');
+            const response = await api.get('/kuliah-kerja/all');
             setData(response.data.data);
             setFilter(response.data.data);
-            // console.log(response.data.data);
+
         } catch (error) {
             console.log(error);
         }
@@ -112,4 +136,4 @@ const TableKuliah = () => {
     );
 };
 
-export default TableKuliah;
+export default TableKuliahKerja;

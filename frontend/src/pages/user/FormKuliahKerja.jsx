@@ -1,9 +1,9 @@
-import { React, useEffect } from 'react'
-import KerjaLayout from '../../components/user/KerjaLayout'
-import { useNavigate } from "react-router-dom"
+import React, {useEffect} from 'react'
+import FormKuliahKerjaLayout from '../../components/user/Form/FormKuliahKerjaLayout'
+import {useNavigate} from "react-router-dom"
 import cookie from "js-cookies"
 
-const Kerja = () => {
+const FormKuliahKerja = () => {
     const navigate = useNavigate()
     const token = cookie.getItem('token')
     const roles = cookie.getItem('roles')
@@ -19,13 +19,11 @@ const Kerja = () => {
         navigate('/admin')
       }
     }, [token, roles, navigate]);
-
     return (
-        <div> 
-                <KerjaLayout />
+        <div>
+            <FormKuliahKerjaLayout />
         </div>
     )
 }
 
-export default Kerja
-
+export default FormKuliahKerja

@@ -2,38 +2,42 @@ import { React, useEffect, useState } from 'react';
 import DataTable from "react-data-table-component";
 import api from '../../../api';
 
-const TableKuliah = () => {
+const TableKerja = () => {
     const columns = [
         {
             name: "Nama",
             sortable: true,
             selector: row => row.nama,
             cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.nama}</div>,
-
         },
         {
             name: "Angkatan",
             sortable: true,
-            selector: row => row.angkatan
-        },
-        {
-            name: "Universitas",
-            sortable: true,
-            selector: row => row.nama_universitas,
-            cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.nama_universitas}</div>,
+            selector: row => row.angkatan,
+            cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.angkatan}</div>,
 
         },
         {
-            name: "Program Studi",
+            name: "Pendidikan Terakhir",
             sortable: true,
-            selector: row => row.prodi,
-            cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.prodi}</div>,
-
+            selector: row => row.pendidikan_terakhir,
         },
         {
-            name: "Jenjang",
+            name: "Nama Perusahaan",
             sortable: true,
-            selector: row => row.jenjang
+            selector: row => row.nama_perusahaan,
+            cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.nama_perusahaan}</div>,
+        },
+        {
+            name: "Jabatan",
+            sortable: true,
+            selector: row => row.jabatan,
+            cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.jabatan}</div>,
+        },
+        {
+            name: "Tahun Kerja",
+            sortable: true,
+            selector: row => row.tahun_kerja
         },
     ];
 
@@ -47,9 +51,10 @@ const TableKuliah = () => {
             return (
                 row.nama.toLowerCase().includes(value) ||
                 row.angkatan.toString().toLowerCase().includes(value) ||
-                row.nama_universitas.toLowerCase().includes(value) ||
-                row.prodi.toLowerCase().includes(value) ||
-                row.jenjang.toLowerCase().includes(value)
+                row.pendidikan_terakhir.toLowerCase().includes(value) ||
+                row.nama_perusahaan.toLowerCase().includes(value) ||
+                row.jabatan.toLowerCase().includes(value) ||
+                row.tahun_kerja.toString().toLowerCase().includes(value)
             );
         });
         setFilter(filterData);
@@ -57,10 +62,9 @@ const TableKuliah = () => {
 
     const readAllKuliah = async () => {
         try {
-            const response = await api.get('/kuliah/all');
+            const response = await api.get('/kerja/all');
             setData(response.data.data);
             setFilter(response.data.data);
-            // console.log(response.data.data);
         } catch (error) {
             console.log(error);
         }
@@ -112,4 +116,5 @@ const TableKuliah = () => {
     );
 };
 
-export default TableKuliah;
+export default TableKerja;
+

@@ -1,18 +1,25 @@
 import { React, useEffect } from 'react'
-import MencariKerjaLayout from '../../components/user/MencariKuliahLayout'
 import { useNavigate } from "react-router-dom"
-import Navbar from '../../components/user/Navbar/Navbar'
+import cookie from "js-cookies"
+import MencariKerjaLayout from '../../components/user/MencariKerjaLayout'
+
 
 const MencariKerja = () => {
   const navigate = useNavigate()
-  const token = localStorage.getItem('token')
+  const token = cookie.getItem('token')
+  const roles = cookie.getItem('roles')
+
 
   useEffect(() => {
-    const updatedToken = localStorage.getItem('token');
+    const updatedToken = cookie.getItem('token');
+    const updatedRoles = cookie.getItem('roles')
     if (!updatedToken) {
       navigate('/', { replace: true });
     }
-  }, [token, navigate]);
+    if (updatedRoles === "admin") {
+      navigate('/admin')
+    }
+  }, [token, roles, navigate]);
 
   return (
     <div>

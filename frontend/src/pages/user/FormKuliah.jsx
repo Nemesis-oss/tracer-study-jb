@@ -1,12 +1,12 @@
-import { React, useEffect } from 'react'
-import KerjaKuliahLayout from '../../components/user/KerjaKuliahLayout'
-import { useNavigate } from "react-router-dom"
+import React,{useEffect} from 'react'
+import FormKuliahLayout from '../../components/user/Form/FormKuliahLayout'
+import {useNavigate} from "react-router-dom"
 import cookie from "js-cookies"
 
-const KerjaKuliah = () => {
+const FormKuliah = () => {
   const navigate = useNavigate()
   const token = cookie.getItem('token')
-  const roles = localStorage.getItem('roles')
+  const roles = cookie.getItem('roles')
 
 
   useEffect(() => {
@@ -19,13 +19,11 @@ const KerjaKuliah = () => {
       navigate('/admin')
     }
   }, [token, roles, navigate]);
-
   return (
     <div>
-      <KerjaKuliahLayout />
+      <FormKuliahLayout />
     </div>
   )
 }
 
-export default KerjaKuliah
-
+export default FormKuliah
