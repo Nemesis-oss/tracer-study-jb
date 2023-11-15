@@ -9,6 +9,7 @@ import {
   getSingleUsers,
   updateUser,
   deleteUser,
+  changePassword,
 } from "../controllers/user.controller.js";
 import {
   runValidation,
@@ -16,6 +17,7 @@ import {
   validationLogin,
   validationResetPassword,
   validationUpdate,
+  validationUserPass,
 } from "../validation/user.validation.js";
 import midleware from "../middleware/user.midleware.js";
 
@@ -29,6 +31,14 @@ router.put(
   validationResetPassword,
   runValidation,
   resetPassword
+);
+
+router.patch(
+  "/ganti-password",
+  midleware,
+  validationUserPass,
+  runValidation,
+  changePassword
 );
 
 router.get("/users", getUsers); // memanggil semua data user

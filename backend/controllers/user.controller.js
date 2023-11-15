@@ -2,8 +2,8 @@ import User from "../models/user.models.js";
 import noIjazahModels from "../models/no.ijazah.models.js";
 import bcryptjs from "bcryptjs";
 import jsonwebtoken from "jsonwebtoken";
-import dotenv from "dotenv";
 import { kirimEmail } from "../helpers/index.js";
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -77,20 +77,19 @@ export const UserRegister = async (req, res) => {
   });
 };
 
-// mengatur tentang login
 export const UserLogin = async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, role } = req.body;
 
   const dataUser = await User.findOne({
-    $or: [{ username: username }, { email: username }],
+    $or: [{ username: username }, { email: username }, { role: role }],
   });
 
   if (dataUser) {
     const passworduser = await bcryptjs.compare(password, dataUser.password);
-
     if (passworduser) {
       const data = {
         id: dataUser._id,
+        role: dataUser.role,
       };
       const token = await jsonwebtoken.sign(data, process.env.JWT_SECRET);
 
@@ -98,15 +97,16 @@ export const UserLogin = async (req, res) => {
         message: "Akun berhasil login!",
         dataUser: dataUser,
         token: token,
+        role: dataUser.role,
       });
     } else {
-      return res.status(403).json({
-        message: "Password tidak ditemukan",
+      return res.status(401).json({
+        message: "Data anda belum terdaftar",
       });
     }
   } else {
-    return res.status(403).json({
-      message: "Username atau email tidak ditemukan",
+    return res.status(402).json({
+      message: "Data anda belum terdaftar",
     });
   }
 };
@@ -175,6 +175,46 @@ export const resetPassword = async (req, res) => {
   }
 };
 
+export const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword, newUsername } = req.body;
+    const userId = req.id;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        status: false,
+        message: "Pengguna tidak ditemukan",
+      });
+    }
+
+    const isPasswordMatch = await bcryptjs.compare(
+      currentPassword,
+      user.password
+    );
+
+    if (!isPasswordMatch) {
+      return res
+        .status(400)
+        .json({ status: false, message: "Kata sandi saat ini tidak sesuai" });
+    }
+
+    const hashedPassword = await bcryptjs.hash(newPassword, 10);
+    user.password = hashedPassword;
+    // user.username = newUsername;
+    await user.save();
+
+    return res
+      .status(200)
+      .json({ status: true, message: "Password berhasil diubah" });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ status: false, message: "Terjadi kesalahan query" });
+  }
+};
+
 export const getUsers = async (req, res) => {
   try {
     const user = await User.find();
@@ -202,9 +242,19 @@ export const updateUser = async (req, res) => {
   try {
     const token = req.headers.authorization;
 
+    const { username } = req.body;
+
+    const cekUsername = await User.findOne({ username: username });
+    if (cekUsername) {
+      return res.status(401).json({
+        message: "Username sudah terdaftar",
+      });
+    }
+
     if (!token) {
       return res.status(401).json({ message: "Token tidak ditemukan" });
     }
+
     const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
 
     if (req.body.password) {
@@ -221,7 +271,7 @@ export const updateUser = async (req, res) => {
         .json({ message: `User dengan id ${decoded.id} tidak ditemukan` });
     }
     res.status(200).json({
-      message: "Profile data berhasil diupdate",
+      message: "Data profile berhasil diupdate",
       data: updatedUser,
     });
   } catch (error) {

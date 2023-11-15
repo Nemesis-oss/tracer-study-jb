@@ -10,8 +10,14 @@ export default async (req, res, next) => {
       message: "tidak ada token",
     });
   }
-
-  const decode = jsonwebtoken.verify(token, process.env.JWT_SECRET);
-  req.id = decode.id;
-  next();
+  try {
+    const decodedToken = jsonwebtoken.verify(token, process.env.JWT_SECRET);
+    req.id = decodedToken.id;
+    next();
+  } catch (error) {
+    console.error("Error verifying JWT token:", error.message);
+    return res.status(401).json({
+      message: "Token tidak valid",
+    });
+  }
 };
