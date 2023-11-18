@@ -107,3 +107,8 @@ export const validationUsaha = [
   check("alamat_usaha", "Alamat usaha tidak boleh kosong").notEmpty(),
   check("tahun_usaha", "Tahun usaha tidak boleh kosong").notEmpty(),
 ];
+
+export const validationIjazah = [
+  check("nama","Nama tidak boleh kosong").notEmpty(),
+  check("nomor_ijazah", "Nomor ijazah tidak boleh kosong").notEmpty()
+]

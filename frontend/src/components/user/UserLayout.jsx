@@ -3,7 +3,6 @@ import Navbar from "./Navbar/Navbar";
 import bg from "../../video/bgJB.mp4"
 import jb from "../../images/logoJB.png"
 
-
 const UserLayout = () => {
 
     return (
