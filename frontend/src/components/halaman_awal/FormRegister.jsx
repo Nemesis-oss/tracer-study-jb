@@ -3,8 +3,6 @@ import jb from "../../images/logoJB.png";
 import api from "../../api.js";
 import { Link } from "react-router-dom";
 
-// import axios from "axios"
-
 const FormRegister = () => {
   const [nama, setNama] = useState("");
   const [tanggal_lahir, setTanggalLahir] = useState("");
@@ -125,8 +123,18 @@ const FormRegister = () => {
       email: email,
       nomor_WA: nomor_WA,
       username: username,
-      password: password,
-    };
+      password: password
+    }
+
+    if (password !== konfrmPassword) {
+      setPasswordMatchError(true);
+      setError("Password dan Konfirmasi password harus sama!");
+      setTimeout(() => {
+        setError('')
+      },5000)
+      return;
+    }
+
     try {
       const response = await api.post("/daftar", data);
       console.log("berhasil", response.data);
@@ -136,17 +144,17 @@ const FormRegister = () => {
       setError(error.response.data.message);
     } finally {
       setTimeout(() => {
-        setAlert("");
-      }, 5000);
+        setAlert('')
+        setError('')
+      }, 5000)
     }
-  };
+  }
+
 
   return (
     <section className="relative">
       {/* gambar background */}
-      <div className="absolute inset-0 bg-cover bg-center bg-[url('../images/back2.png')] brightness-50">
-        {" "}
-      </div>
+      <div className="fixed inset-0 bg-cover bg-center bg-[url('../images/back2.png')] brightness-50"> </div>
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto relative z-10">
         {/* bagian alert berhasil*/}
         {alertt && (
@@ -472,7 +480,7 @@ const FormRegister = () => {
                 )}
                 {passwordMatchError && (
                   <p className="text-sm text-red-500">
-                    Konfirmasi kata sandi tidak cocok dengan kata sandi.
+                    Konfirmasi password tidak cocok dengan password.
                   </p>
                 )}
               </div>

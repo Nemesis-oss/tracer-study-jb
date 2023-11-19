@@ -1,14 +1,17 @@
 import { React, useState } from "react";
-import { Link } from "react-router-dom";
-import jb from "../../images/logoJB.png";
+import { Link } from "react-router-dom"
+import jb from "../../images/logoJB.png"
 import { useNavigate } from "react-router-dom";
 import api from "../../api";
+import cookie from "js-cookies"
 
 const FormLogin = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState('')
+
   const navigate = useNavigate();
 
   const handleOnChangeUsername = (e) => {
@@ -47,18 +50,37 @@ const FormLogin = () => {
     try {
       const response = await api.post("/login", data);
       if (response) {
-        localStorage.setItem("token", response.data.token);
-        navigate("/user");
+        const expirationTimeInSeconds = 3600;
+        cookie.setItem("token", response.data.token, expirationTimeInSeconds);
+        cookie.setItem("roles", response.data.role, expirationTimeInSeconds)
+        if (response.data.role === "user") {
+          navigate("/user");
+        } if (response.data.role === "admin") {
+          navigate("/admin")
+        }
       }
-    } catch (error) {}
+    } catch (error) {
+      setError(error.response.data.message)
+    } finally {
+      setTimeout(() => {
+        setError('')
+      }, 5000)
+    }
   };
 
   return (
     <section className="relative">
       {/* gambar background */}
       <div className="absolute inset-0 bg-cover bg-center bg-[url('../images/back3.png')] brightness-50">
-        {" "}
       </div>
+      {error && (
+        <div className="fixed top-0 h-16 inset-0 flex items-center p-4 mb-4 text-sm text-red-900 border border-red-500 rounded-lg bg-red-50  dark:text-red-600 dark:border-red-900" role="alert">
+          <svg className="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+          </svg>
+          {error}
+        </div>
+      )}
       {/* isi konten */}
       <div className="flex flex-col items-center justify-center px-2 py-10 md:h-screen brightness-100 relative z-10 h-[100vh]">
         {/* Tulisan SMA Kolose */}
@@ -95,7 +117,7 @@ const FormLogin = () => {
                 <div className="relative z-0 w-96">
                   <input
                     type="text"
-                    id="default_standard"
+                    id="default_input"
                     className="block py-2.5 px-3 w-full  text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=""
                     onChange={handleOnChangeUsername}
@@ -128,7 +150,7 @@ const FormLogin = () => {
                 <div className="relative z-0 w-96">
                   <input
                     type={showPassword ? "text" : "password"}
-                    id="default_standard"
+                    id="default_password"
                     className="block py-2.5 px-3 w-full  text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=""
                     onChange={handleOnChangePassword}
@@ -212,7 +234,7 @@ const FormLogin = () => {
                 </div>
                 {/* tulisan forget password */}
                 <Link
-                  to={"#"}
+                  to={'/lupa-password'}
                   className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
                 >
                   Forgot password?
