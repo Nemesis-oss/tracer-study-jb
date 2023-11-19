@@ -84,13 +84,13 @@ const FormLogin = () => {
       {/* isi konten */}
       <div className="flex flex-col items-center justify-center px-2 py-10 md:h-screen brightness-100 relative z-10 h-[100vh]">
         {/* Tulisan SMA Kolose */}
-        <a
-          href="/"
+        <Link
+          to={"/"}
           className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
         >
           <img className="w-8 h-8 mr-2" src={jb} alt="logo" />
           SMA Kolose De Britto
-        </a>
+        </Link>
         {/* isi konten (card form login) */}
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -252,7 +252,7 @@ const FormLogin = () => {
                 </button>
                 {/* login back */}
                 <Link
-                  to="/"
+                  to={"/"}
                   className="w-full text-white hover:bg-white-700 focus:ring-4 focus:outline-none focus:ring-gray-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-400 hover:dark:text-black"
                 >
                   <button type="submit">Back</button>
@@ -262,7 +262,7 @@ const FormLogin = () => {
               <p className="text-sm font-light text-gray-600 dark:text-gray-600">
                 Don’t have an account yet?
                 <Link
-                  to="/registrasi"
+                  to={"/registrasi"}
                   className="ml-1 font-medium text-primary-600 hover:underline dark:text-primary-500"
                 >
                   Register

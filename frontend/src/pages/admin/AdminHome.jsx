@@ -1,10 +1,10 @@
 import React from "react";
-import HomeAdmin from "../../components/admin/HomeAdmin";
+import HalamanAwalAdminLayout from "../../components/admin/HalamanAwalAdminLayout";
 
 const AdminHome = () => {
   return (
     <div>
-      <HomeAdmin/>
+      <HalamanAwalAdminLayout />
     </div>
   );
 };

@@ -9,7 +9,7 @@ const Slider = () => {
   return (
     <Fade cascade>
       <section className="relative md:h-screen h-24">
-        <div className="relative md:h-full bg-cover bg-center brightness-50 z-10 h-2/6 ">
+        <div className="relative md:h-full bg-cover bg-center brightness-50 z-10 h-[250%]">
           {/* Komponen Carousel yang menampilkan gambar-gambar slider */}
           <Carousel slideInterval={3000}>
             <img src={img1} alt="" />

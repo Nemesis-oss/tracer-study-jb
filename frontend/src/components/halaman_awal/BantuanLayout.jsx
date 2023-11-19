@@ -5,6 +5,7 @@ import {
 } from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
 import Navbar from "./Navbar/Navbar";
+import { Link } from "react-router-dom";
 const BantuanLayout = () => {
   return (
     <div className="bg-[#242c34]">
@@ -28,9 +29,9 @@ const BantuanLayout = () => {
             </h1>
             <p>
               Cuku pergi ke{" "}
-              <a className="hover:underline" href="/">
+              <Link className="hover:underline" to={"/"}>
                 Halaman Utama
-              </a>{" "}
+              </Link>{" "}
               lalu pilih Registrasi. Isi formulir yang diberikan lalu
               Registrasi.
             </p>
@@ -112,12 +113,12 @@ const BantuanLayout = () => {
               validasi lolos maka akan admin tampilkan. Bila tidak, maka
               permintaan penambahan user akan dihapus. Namun, bila anda tidak
               ingin data anda disini, anda bisa langsung menghubungi{" "}
-              <a
-                href="mailto:kolese@debritto.sch.id"
+              <Link
+                to={"mailto:kolese@debritto.sch.id"}
                 className="hover:underline"
               >
                 kami
-              </a>{" "}
+              </Link>{" "}
               .
             </p>
           </VerticalTimelineElement>
@@ -137,12 +138,12 @@ const BantuanLayout = () => {
             <p>
               Silahkan anda melapor kepada pihak kami untuk detail bug atau
               error tersebut melalui{" "}
-              <a
-                href="mailto:kolese@debritto.sch.id"
+              <Link
+                to={"mailto:kolese@debritto.sch.id"}
                 className="hover:underline"
               >
                 email
-              </a>
+              </Link>
             </p>
           </VerticalTimelineElement>
 

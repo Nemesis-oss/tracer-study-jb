@@ -3,11 +3,6 @@ import { Fade } from "react-awesome-reveal";
 import { keyframes } from "@emotion/react";
 import { Link } from "react-router-dom";
 
-const customAnimation = keyframes`
-  
-  }
-`;
-
 const AnimatedSignUp = () => {
   return (
     <Fade>
@@ -24,7 +19,7 @@ const AnimatedSignUp = () => {
           </label>
         </div>
         <div className="animate-bounce mt-8 mb-6">
-          <Link to={'/registrasi'} className=" bg-white p-4 rounded py-4 px-8">
+          <Link to={"/registrasi"} className=" bg-white p-4 rounded py-4 px-8">
             SIGN UP!
           </Link>
         </div>

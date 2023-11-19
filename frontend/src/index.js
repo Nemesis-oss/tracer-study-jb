@@ -3,22 +3,36 @@ import ReactDOM from "react-dom/client";
 import "./styles/index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import {
-  // AdminHome,
+  AdminHome,
   Bantuan,
   HalamanAwal,
-  Kerja,
-  KerjaKuliah,
-  Kuliah,
+  KerjaUser,
+  KerjaKuliahUser,
+  KuliahUser,
   Login,
   LupaPassword,
-  MencariKerja,
+  MencariKerjaUser,
   NotFound,
   Profile,
   Registrasi,
-  Usaha,
+  UsahaUser,
   UserHome,
+  UbahDataIjazah,
+  FormInputIjazah,
+  DaftarUser,
+  Kerja,
+  KerjaDanKuliah,
+  Kuliah,
+  MencariKerja,
+  Usaha,
+  EditDataIjazah,
+  EditDataUser,
+  EditDataKerja,
+  EditDataKerjaDanKuliah,
+  EditDataKuliah,
+  EditDataMencariKerja,
+  EditDataUsaha,
   ResetPassword,
-  HomeAdmin,
   FormKuliah,
   FormKerja,
   FormKuliahKerja,
@@ -66,23 +80,23 @@ const router = createBrowserRouter([
   },
   {
     path: "/user/kuliah",
-    element: <Kuliah />,
+    element: <KuliahUser />,
   },
   {
     path: "/user/kuliah-kerja",
-    element: <KerjaKuliah />,
+    element: <KerjaKuliahUser />,
   },
   {
     path: "/user/kerja",
-    element: <Kerja />,
+    element: <KerjaUser />,
   },
   {
     path: "/user/mencari-kerja",
-    element: <MencariKerja />,
+    element: <MencariKerjaUser />,
   },
   {
     path: "/user/usaha",
-    element: <Usaha />,
+    element: <UsahaUser />,
   },
   {
     path: "/user/profile/tambah-kuliah/:userId",
@@ -105,29 +119,89 @@ const router = createBrowserRouter([
     element: <FormUsaha />,
   },
   {
-    path:"/user/profile/edit-kuliah/:userId",
-    element:<EditKuliah/>
+    path: "/user/profile/edit-kuliah/:userId",
+    element: <EditKuliah />,
   },
   {
-    path:"/user/profile/edit-kerja/:userId",
-    element:<EditKerja/>
+    path: "/user/profile/edit-kerja/:userId",
+    element: <EditKerja />,
   },
   {
-    path:"/user/profile/edit-kuliah-kerja/:userId",
-    element:<EditKuliahKerja/>
+    path: "/user/profile/edit-kuliah-kerja/:userId",
+    element: <EditKuliahKerja />,
   },
   {
-    path:"/user/profile/edit-mencari-kerja/:userId",
-    element:<EditMencariKerja/>
-  }, 
+    path: "/user/profile/edit-mencari-kerja/:userId",
+    element: <EditMencariKerja />,
+  },
   {
-    path:"/user/profile/edit-usaha/:userId",
-    element:<EditUsaha/>
+    path: "/user/profile/edit-usaha/:userId",
+    element: <EditUsaha />,
   },
 
   {
     path: "/admin",
-    element: <HomeAdmin />,
+    element: <AdminHome />,
+  },
+  {
+    path: "/admin/ubah-data-ijazah",
+    element: <UbahDataIjazah />,
+  },
+  {
+    path: "/admin/ubah-data-ijazah/input-data",
+    element: <FormInputIjazah />,
+  },
+  {
+    path: "/admin/ubah-data-ijazah/edit-data-ijazah",
+    element: <EditDataIjazah />,
+  },
+  {
+    path: "/admin/daftar-user",
+    element: <DaftarUser />,
+  },
+  {
+    path: "/admin/daftar-user/edit-data-user",
+    element: <EditDataUser />,
+  },
+  {
+    path: "/admin/kerja",
+    element: <Kerja />,
+  },
+  {
+    path: "/admin/kerja/edit-data-kerja",
+    element: <EditDataKerja />,
+  },
+  {
+    path: "/admin/kerja-dan-kuliah",
+    element: <KerjaDanKuliah />,
+  },
+  {
+    path: "/admin/kerja-dan-kuliah/edit-data-kerja-dan-kuliah",
+    element: <EditDataKerjaDanKuliah />,
+  },
+  {
+    path: "/admin/kuliah",
+    element: <Kuliah />,
+  },
+  {
+    path: "/admin/kuliah/edit-data-kuliah",
+    element: <EditDataKuliah />,
+  },
+  {
+    path: "/admin/mencari-kerja",
+    element: <MencariKerja />,
+  },
+  {
+    path: "/admin/mencari-kerja/edit-data-mencari-kerja",
+    element: <EditDataMencariKerja />,
+  },
+  {
+    path: "/admin/usaha",
+    element: <Usaha />,
+  },
+  {
+    path: "/admin/usaha/edit-data-usaha",
+    element: <EditDataUsaha />,
   },
 
   { path: "*", element: <NotFound /> },

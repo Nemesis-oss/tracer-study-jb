@@ -1,9 +1,10 @@
 import React from "react";
 import Reveal, { Fade, Slide } from "react-awesome-reveal";
+import { Link } from "react-router-dom";
 
 const Cards = () => {
   return (
-    <div className="md:flex md:justify-center md:space-x-4 md:my-20">
+    <div className="md:flex md:justify-center md:space-x-4 md:my-20 mt-[40%]">
       {/* Membungkus dua kartu dengan tata letak fleksibel pada tampilan tertentu */}
       <Slide>
         <div className="max-w-xl p-6 mx-8 bg-white border border-gray-200 rounded-lg">
@@ -15,11 +16,11 @@ const Cards = () => {
           {/* Garis pemisah */}
           <hr className="" />
           {/* Judul kartu pertama dengan tautan */}
-          <a href="#">
-            <h5 className="mb-2 text-3xl tracking-tight text-gray-900 dark:text-black text-black text-center">
+          <Link to={"/"}>
+            <h5 className="mb-2 text-3xl tracking-tight text-gray-900 dark:text-black text-center">
               SMA Kolese De Britto
             </h5>
-          </a>
+          </Link>
           {/* Deskripsi kartu pertama */}
           <p className="mb-3 font-normal text-gray-400 p-6 text-justify">
             Kolese De Britto (De Britto College atau yang lebih dikenal dengan
@@ -35,8 +36,8 @@ const Cards = () => {
           </p>
           {/* Tombol "LEBIH LENGKAP" dengan ikon panah */}
           <div className="flex justify-center items-center">
-            <a
-              href="https://debritto.sch.id/"
+            <Link
+              to={"https://debritto.sch.id/"}
               className="inline-flex justify-center items-center px-3 py-2 text-sm font-medium text-center text-gray-400 hover:text-black hover:bg-gray-100 ring-offset-2 ring-1 ring-gray-300 hover:ring-black hover:ring-1 dark:bg-white dark:hover:bg-white-700 "
             >
               LEBIH LENGKAP
@@ -55,23 +56,23 @@ const Cards = () => {
                   d="M1 5h12m0 0L9 1m4 4L9 9"
                 />
               </svg>
-            </a>
+            </Link>
           </div>
         </div>
       </Slide>
       <Slide direction="right">
         {/* Kartu kedua dengan deskripsi lainnya */}
-        <div className="max-w-xl p-6 mx-8 bg-white border border-gray-200 rounded-lg">
+        <div className="md:max-w-xl md:mt-0 mt-4 md:mb-0 mb-8 p-6 mx-8 bg-white border border-gray-200 rounded-lg">
           <div className="text-sm text-center text-gray-400 tracking-[.25em]">
             {" "}
             BACA SELENGKAPNYA
           </div>
           <hr className="" />
-          <a href="#">
+          <Link to={"/"}>
             <h5 className="mb-2 text-3xl tracking-tight text-black text-center">
               Sistem Informasi Alumni
             </h5>
-          </a>
+          </Link>
           <p className="mb-3 font-normal text-gray-400 p-6 text-justify">
             Sistem Informasi Alumni atau yang sering disebut sebagai survey
             alumni atau survey “follow up” adalah studi mengenai lulusan lembaga
