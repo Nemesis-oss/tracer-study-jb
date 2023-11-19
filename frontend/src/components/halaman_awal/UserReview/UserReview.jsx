@@ -3,7 +3,7 @@ import Reveal, { cascade } from "react-awesome-reveal";
 const UserReview = () => {
   return (
     <div className="mx-36 mb-28 mt-10">
-      <div className="mx-auto p-4 md:py-8 bg-gray-100 text-center sm:justify-center bg-black ">
+      <div className="mx-auto p-4 md:py-8 bg-gray-100 text-center sm:justify-center">
         {/* Garis pemisah */}
         <h2 className="text-sm text-gray-400 tracking-[.25em] mt-[1em] mb-[1em] ">
           LOGIN UNTUK MENDAPATKAN GAMBARAN PENUH!

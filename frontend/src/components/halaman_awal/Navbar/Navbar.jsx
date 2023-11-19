@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import logo from "../../../images/logoJB.png";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,16 +12,16 @@ const Navbar = () => {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-30 transition-all duration-300 ease-in-out ${
-        isMenuOpen ? "bg-black bg-opacity-70" : "bg-black bg-opacity-70 "
+        isMenuOpen ? "bg-black bg-opacity-70" : "bg-black bg-opacity-70"
       }`}
     >
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 ">
-        <a href="/" className="flex items-center">
+        <Link to={"/"} className="flex items-center">
           <img src={logo} className="h-8 mr-3" alt="" />
-          <span className="self-center font-semibold whitespace-nowrap dark:text-white block py-2 pl-3 pr-4 text-gray-900 rounded hover:text-blue-700 md:border-0 md:hover-text-blue-700 md:p-0 dark:text-white md:dark:hover-text-blue-500 dark:hover-bg-gray-700">
+          <span className="self-center font-semibold whitespace-nowrap dark:text-white block py-2 pl-3 pr-4 text-gray-900 rounded hover:text-cyan-500 md:border-0 ">
             SMA KOLESE DE BRITTO
           </span>
-        </a>
+        </Link>
         <button
           data-collapse-toggle="navbar-default"
           type="button"
@@ -54,37 +55,37 @@ const Navbar = () => {
         >
           <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-700 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-transparent dark:border-gray-700">
             <li>
-              <a
-                href="/"
-                className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:text-blue-700 md:border-0 md:hover-text-blue-700 md:p-0 dark:text-white md:dark:hover-text-blue-500 dark:hover-bg-gray-700"
+              <Link
+                to={"/"}
+                className="block py-2 pl-3 pr-4 text-white rounded hover:text-cyan-500 md:border-0 md:p-0"
                 aria-current="page"
               >
                 HALAMAN UTAMA
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="/login"
-                className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:text-blue-700 md:border-0 md:hover-text-blue-700 md:p-0 dark:text-white md:dark:hover-text-blue-500 dark:hover-bg-gray-700"
+              <Link
+                to={"/login"}
+                className="block py-2 pl-3 pr-4 text-white rounded hover:text-cyan-500 md:border-0 md:p-0"
               >
                 LOGIN
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="/registrasi"
-                className="block py-2 pl-3 pr-4 text-gray-900 rounded hover-text-blue-700 md:border-0 md:hover-text-blue-700 md:p-0 dark:text-white md:dark:hover-text-blue-500 dark:hover-bg-gray-700"
+              <Link
+                to={"/registrasi"}
+                className="block py-2 pl-3 pr-4 text-white rounded hover:text-cyan-500 md:border-0 md:p-0"
               >
                 REGISTRASI
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="/bantuan"
-                className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:text-blue-700 md:border-0 md:hover-text-blue-700 md:p-0 dark:text-white md:dark:hover-text-blue-500 dark:hover-bg-gray-700"
+              <Link
+                to={"/bantuan"}
+                className="block py-2 pl-3 pr-4 text-white rounded hover:text-cyan-500 md:border-0 md:p-0"
               >
                 BANTUAN
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
