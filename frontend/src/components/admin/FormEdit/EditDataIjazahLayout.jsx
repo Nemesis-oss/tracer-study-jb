@@ -17,6 +17,7 @@ const EditDataIjazahLayout = () => {
   const handleNama = (e) => {
     const value = e.target.value;
     setNama(value);
+    
   };
   return (
     <div className="flex flex-col items-center justify-center px-6 py-[40%] md:py-[10%] mx-auto relative z-10">
