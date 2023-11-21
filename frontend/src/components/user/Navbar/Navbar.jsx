@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import cookie from "js-cookies"
 
 const Navbar = () => {
@@ -23,9 +23,9 @@ const Navbar = () => {
 
   const handleClickLogout = (e) => {
     e.preventDefault()
-    document.cookie = "roles=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    navigator("/");
+    cookie.removeItem("token");
+    cookie.removeItem("roles");
+    navigator("/", { replace: true });
   };
 
   return (

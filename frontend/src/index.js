@@ -152,7 +152,7 @@ const router = createBrowserRouter([
     element: <FormInputIjazah />,
   },
   {
-    path: "/admin/ubah-data-ijazah/edit-data-ijazah",
+    path: "/admin/ubah-data-ijazah/edit-data-ijazah/:id",
     element: <EditDataIjazah />,
   },
   {
@@ -160,7 +160,7 @@ const router = createBrowserRouter([
     element: <DaftarUser />,
   },
   {
-    path: "/admin/daftar-user/edit-data-user",
+    path: "/admin/daftar-user/edit-data-user/:id",
     element: <EditDataUser />,
   },
   {
@@ -168,7 +168,7 @@ const router = createBrowserRouter([
     element: <Kerja />,
   },
   {
-    path: "/admin/kerja/edit-data-kerja",
+    path: "/admin/kerja/edit-data-kerja/:userId",
     element: <EditDataKerja />,
   },
   {
@@ -176,7 +176,7 @@ const router = createBrowserRouter([
     element: <KerjaDanKuliah />,
   },
   {
-    path: "/admin/kerja-dan-kuliah/edit-data-kerja-dan-kuliah",
+    path: "/admin/kerja-dan-kuliah/edit-data-kerja-dan-kuliah/:userId",
     element: <EditDataKerjaDanKuliah />,
   },
   {
@@ -184,7 +184,7 @@ const router = createBrowserRouter([
     element: <Kuliah />,
   },
   {
-    path: "/admin/kuliah/edit-data-kuliah",
+    path: "/admin/kuliah/edit-data-kuliah/:userId",
     element: <EditDataKuliah />,
   },
   {
@@ -192,7 +192,7 @@ const router = createBrowserRouter([
     element: <MencariKerja />,
   },
   {
-    path: "/admin/mencari-kerja/edit-data-mencari-kerja",
+    path: "/admin/mencari-kerja/edit-data-mencari-kerja/:userId",
     element: <EditDataMencariKerja />,
   },
   {
@@ -200,7 +200,7 @@ const router = createBrowserRouter([
     element: <Usaha />,
   },
   {
-    path: "/admin/usaha/edit-data-usaha",
+    path: "/admin/usaha/edit-data-usaha/:userId",
     element: <EditDataUsaha />,
   },
 

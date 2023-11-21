@@ -8,8 +8,8 @@ const FormKerjaLayout = () => {
     const [jabatan, setJabatan] = useState('')
     const [perusahaan, setPerusahaan] = useState('')
     const [error, setError] = useState('')
-    const [pendAkhir, setPendAkhir] = useState('')
     const [tahunKerja, setTahunKerja] = useState('')
+    const [pendAkhir, setPendAkhir] = useState('')
 
     const handleChangePendAkhir = (e) => {
         const value = e.target.value

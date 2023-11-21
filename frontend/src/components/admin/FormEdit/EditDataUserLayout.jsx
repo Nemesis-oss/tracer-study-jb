@@ -1,11 +1,10 @@
-import { React, useState } from "react";
-import { Link } from "react-router-dom";
+import { React, useState, useEffect } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import api from "../../../api";
+import moment from 'moment';
+
 
 const EditDataUserLayout = () => {
-  const handleUpdate = (e) => {
-    e.preventDefault();
-  };
-
   const [nama, setNama] = useState("");
   const [tanggal_lahir, setTanggalLahir] = useState("");
   const [nomor_ijazah, setNomorIjsazah] = useState("");
@@ -14,14 +13,20 @@ const EditDataUserLayout = () => {
   const [email, setEmail] = useState("");
   const [nomor_WA, setNomorWA] = useState("");
   const [username, setUsername] = useState("");
+  const [error, setError] = useState('')
+
+  const { id } = useParams()
+  const navigate = useNavigate()
 
   const handleNama = (e) => {
     const value = e.target.value;
     setNama(value);
   };
   const handleChangeTgl = (e) => {
-    const value = e.target.value;
-    setTanggalLahir(value);
+    const isoDate = e.target.value;
+    const jsDate = new Date(isoDate);
+    const formattedDate = jsDate.toISOString().split('T')[0];
+    setTanggalLahir(formattedDate);
   };
   const handleChangeNoIjazah = (e) => {
     const value = e.target.value;
@@ -49,6 +54,55 @@ const EditDataUserLayout = () => {
     const value = e.target.value;
     setUsername(value);
   };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      const data = {
+        nama: nama,
+        tanggal_lahir: tanggal_lahir,
+        nomor_ijazah: nomor_ijazah,
+        jurusan: jurusan,
+        angkatan: angkatan,
+        email: email,
+        nomor_WA: nomor_WA,
+        username: username
+      }
+      const response = await api.put(`/update-user-by-admin/${id}`, data)
+      alert('Data berhasil di update')
+      navigate('/admin/daftar-user')
+    } catch (error) {
+      setError(error.response.data.message)
+    }
+  };
+
+  const readSingleUser = async () => {
+    try {
+      const response = await api.get(`/single-user-by-admin/${id}`)
+      const dataUser = response.data.data
+      const formattedDate = moment(dataUser.tanggal_lahir).format("YYYY-MM-DD");
+      setNama(dataUser.nama)
+      setTanggalLahir(formattedDate);
+      setNomorIjsazah(dataUser.nomor_ijazah)
+      setJurusan(dataUser.jurusan)
+      setAngkatan(dataUser.angkatan)
+      setEmail(dataUser.email)
+      setNomorWA(dataUser.nomor_WA)
+      setUsername(dataUser.username)
+      console.log("ini data user", dataUser)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setTimeout(() => {
+        setError('')
+      }, 5000)
+    }
+  }
+
+  useEffect(() => {
+    readSingleUser()
+  }, [])
+
   return (
     <section className="relative">
       <div className="flex flex-col items-center justify-center px-6 py-[40%] md:py-[10%] mx-auto relative z-10">
@@ -56,6 +110,14 @@ const EditDataUserLayout = () => {
           {" "}
         </div>
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 z-20">
+          {error && (
+            <div className="fixed top-0 h-16 inset-0 flex items-center p-4 mb-4 text-sm text-red-900 border border-red-500 rounded-lg bg-red-50  dark:text-red-600 dark:border-red-900" role="alert">
+              <svg className="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+              </svg>
+              {error}
+            </div>
+          )}
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-black">
               Edit Data User
@@ -231,7 +293,7 @@ const EditDataUserLayout = () => {
               </div>
             </form>
           </div>
-                  
+
         </div>
       </div>
     </section>

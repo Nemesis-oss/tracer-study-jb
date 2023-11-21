@@ -69,14 +69,30 @@ export const getAll = async (req, res) => {
   }
 };
 
+export const readKuliahByAdmin = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const kuliah = await Kuliah.findOne({ user: userId });
+    return res.status(201).json({
+      status: true,
+      data: kuliah,
+    });
+  } catch (error) {
+    return res.status(401).json({
+      status: false,
+      data: error,
+    });
+  }
+};
+
 // Memperbarui data kuliah
 export const updateKuliah = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const { nama_universitas, prodi, jenjang } = req.body;
+    const { nama, angkatan, nama_universitas, prodi, jenjang } = req.body;
     const kuliah = await Kuliah.findOneAndUpdate(
       { user: userId },
-      { nama_universitas, prodi, jenjang },
+      { nama, angkatan, nama_universitas, prodi, jenjang },
       { new: true }
     );
     if (!kuliah) {

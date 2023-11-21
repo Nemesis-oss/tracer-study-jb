@@ -109,6 +109,6 @@ export const validationUsaha = [
 ];
 
 export const validationIjazah = [
-  check("nama","Nama tidak boleh kosong").notEmpty(),
-  check("nomor_ijazah", "Nomor ijazah tidak boleh kosong").notEmpty()
-]
+  check("nama", "Nama tidak boleh kosong").notEmpty(),
+  check("nomor_ijazah", "Nomor ijazah tidak boleh kosong").notEmpty(),
+];

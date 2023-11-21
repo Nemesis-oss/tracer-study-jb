@@ -77,15 +77,43 @@ export const readSingleUsaha = async (req, res) => {
     });
   }
 };
+export const readUsahaByAdmin = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const usaha = await Usaha.findOne({ user: userId });
+    return res.status(201).json({
+      status: true,
+      data: usaha,
+    });
+  } catch (error) {
+    return res.status(401).json({
+      status: false,
+      data: error,
+    });
+  }
+};
 
 export const updateUsaha = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const { pendidikan_akhir, jenis_usaha, alamat_usaha, tahun_usaha } =
-      req.body;
+    const {
+      nama,
+      angkatan,
+      pendidikan_akhir,
+      jenis_usaha,
+      alamat_usaha,
+      tahun_usaha,
+    } = req.body;
     const usaha = await Usaha.findOneAndUpdate(
       { user: userId },
-      { pendidikan_akhir, jenis_usaha, alamat_usaha, tahun_usaha },
+      {
+        nama,
+        angkatan,
+        pendidikan_akhir,
+        jenis_usaha,
+        alamat_usaha,
+        tahun_usaha,
+      },
       { new: true }
     );
     return res.status(201).json({

@@ -58,7 +58,7 @@ const TableKerja = () => {
             );
         });
         setFilter(filterData);
-    };
+    }; 
 
     const readAllKuliah = async () => {
         try {

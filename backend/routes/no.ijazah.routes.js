@@ -19,4 +19,4 @@ router.get("/ijazah/:id", readSingleIjazah);
 router.put("/ijazah/:id", validationIjazah, runValidation, updateIjazah);
 router.delete("/ijazah/:id", deleteIjazah);
 
-export default router;
+export default router; 

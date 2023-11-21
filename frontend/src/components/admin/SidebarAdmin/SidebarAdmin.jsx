@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import img from "../../../images/profile.png";
+import cookie from "js-cookies"
 const SidebarAdmin = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdown] = useState(false);
@@ -17,6 +18,15 @@ const SidebarAdmin = () => {
 
   const toggleUserDropdown = () => {
     setIsUserDropdown(!isUserDropdownOpen);
+  };
+
+  const navigator = useNavigate();
+
+  const handleClickLogout = (e) => {
+    e.preventDefault()
+    cookie.removeItem("token");
+    cookie.removeItem("roles");
+    navigator("/", { replace: true });
   };
 
   return (
@@ -53,9 +63,8 @@ const SidebarAdmin = () => {
                 <div>
                   <button
                     type="button"
-                    className={`flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600 ${
-                      isUserDropdownOpen ? "bg-gray-100" : ""
-                    }`}
+                    className={`flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600 ${isUserDropdownOpen ? "bg-gray-100" : ""
+                      }`}
                     aria-expanded={isUserDropdownOpen}
                     onClick={toggleUserDropdown}
                     data-dropdown-toggle="dropdown-user"
@@ -92,7 +101,7 @@ const SidebarAdmin = () => {
                 className="flex items-center p-2 rounded-lg text-[#828895] hover:text-[#5cc4fa] hover:bg-gray-700 group"
               >
                 <svg
-                  className="w-5 h-5 text-gray-500 transition duration-75 text-[#828895] group-hover:text-[#5cc4fa]"
+                  className="w-5 h-5 transition duration-75 text-[#828895] group-hover:text-[#5cc4fa]"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
@@ -104,7 +113,6 @@ const SidebarAdmin = () => {
                 <span className="ml-3">Dashboard</span>
               </Link>
             </li>
-
             <li>
               <Link
                 className="flex items-center p-2 rounded-lg text-[#828895] hover:text-[#5cc4fa] hover:bg-gray-700 group"
@@ -146,9 +154,8 @@ const SidebarAdmin = () => {
             <li>
               <button
                 type="button"
-                className={`flex items-center w-full p-2 text-base text-[#828895] hover:text-[#5cc4fa] transition duration-75 rounded-lg group hover:bg-gray-700   ${
-                  isDropdownOpen ? "bg-gray-700" : ""
-                }`}
+                className={`flex items-center w-full p-2 text-base text-[#828895] hover:text-[#5cc4fa] transition duration-75 rounded-lg group hover:bg-gray-700   ${isDropdownOpen ? "bg-gray-700" : ""
+                  }`}
                 onClick={toggleDropdown}
                 aria-controls="dropdown-example"
                 aria-expanded={isDropdownOpen}
@@ -234,9 +241,9 @@ const SidebarAdmin = () => {
               </div>
             </li>
             <li>
-              <Link
-                className="flex items-center p-2 rounded-lg text-[#828895] hover:text-[#5cc4fa] hover:bg-gray-700 group"
-                to={"/"}
+              <button
+                className="flex items-center p-2 w-full rounded-lg text-[#828895] hover:text-[#5cc4fa] hover:bg-gray-700 group"
+                onClick={handleClickLogout}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -250,9 +257,8 @@ const SidebarAdmin = () => {
                     clipRule="evenodd"
                   />
                 </svg>
-
                 <span className="ml-3 text">Logout</span>
-              </Link>
+              </button>
             </li>
           </ul>
         </div>

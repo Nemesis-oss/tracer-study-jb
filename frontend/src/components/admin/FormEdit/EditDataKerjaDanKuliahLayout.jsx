@@ -1,5 +1,7 @@
-import { useState, React } from "react";
-import { Link } from "react-router-dom";
+import { useState, React, useEffect } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import api from "../../../api"
+
 const EditDataKerjaDanKuliahLayout = () => {
   const [nama, setNama] = useState("");
   const [angkatan, setAngkatan] = useState("");
@@ -9,10 +11,11 @@ const EditDataKerjaDanKuliahLayout = () => {
   const [namaUniversitas, setNamaUniversitas] = useState("");
   const [jurusan, setJurusan] = useState("");
   const [jenjang, setJenjang] = useState("");
+  const [error, setError] = useState("") 
 
-  const handleUpdate = (e) => {
-    e.preventDefault();
-  };
+  const { userId } = useParams()
+  const navigate = useNavigate()
+
   const handleNama = (e) => {
     const value = e.target.value;
     setNama(value);
@@ -45,12 +48,65 @@ const EditDataKerjaDanKuliahLayout = () => {
     const value = e.target.value;
     setJenjang(value);
   };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      const updatedData = {
+        nama: nama,
+        angkatan: angkatan,
+        nama_perusahaan: namaPerusahaan,
+        jabatan: jabatan,
+        tahun_kerja: tahunMasuk,
+        nama_universitas: namaUniversitas,
+        prodi: jurusan,
+        jenjang: jenjang
+      }
+      await api.put(`/kuliah-kerja/${userId}`, updatedData);
+      alert('Data berhasil di update')
+      navigate('/admin/kerja-dan-kuliah');
+    } catch (error) {
+      setError(error.response.data.message);
+    } finally {
+      setTimeout(() => {
+        setError('');
+      }, 3000);
+    }
+  };
+
+  const readSingleKuliahKerja = async () => {
+    try {
+      const response = await api.get(`/kuliah-kerja/${userId}`)
+      const dataKerja = response.data.data
+      setNama(dataKerja.nama)
+      setAngkatan(dataKerja.angkatan)
+      setNamaPerusahaan(dataKerja.nama_perusahaan)
+      setJabatan(dataKerja.jabatan)
+      setTahunMasuk(dataKerja.tahun_kerja)
+      setNamaUniversitas(dataKerja.nama_universitas)
+      setJurusan(dataKerja.prodi)
+      setJenjang(dataKerja.jenjang)
+    } catch (error) {
+
+    }
+  }
+  useEffect(() => {
+    readSingleKuliahKerja()
+  }, [])
+
   return (
     <section className="relative">
-      <div className="flex flex-col items-center justify-center px-6 py-[40%] md:py-[10%] mx-auto relative z-10">
-        <div className="absolute inset-0 bg-cover bg-center bg-[url('../images/back2.png')] brightness-50 z-0">
-          {" "}
-        </div>
+      {/* gambar background */}
+      <div className="fixed inset-0 bg-cover bg-center bg-[url('../images/bg1.jpeg')] brightness-50 h-[100vh]"> </div>
+      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto relative z-10">
+        {error && (
+          <div className="fixed top-0 h-16 inset-0 flex items-center p-4 mb-4 text-sm text-red-900 border border-red-500 rounded-lg bg-red-50  dark:text-red-600 dark:border-red-900" role="alert">
+            <svg className="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+            </svg>
+            {error}
+          </div>
+        )}
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 z-20">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-black">
@@ -229,7 +285,7 @@ const EditDataKerjaDanKuliahLayout = () => {
               </div>
             </form>
           </div>
-                  
+
         </div>
       </div>
     </section>

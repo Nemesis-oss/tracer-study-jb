@@ -158,7 +158,7 @@ const ProfileLayout = () => {
             }
         }
     }
-
+ 
     const deleteKerja = async (idKerja) => {
         const confirmDelete = window.confirm("Apakah Anda yakin ingin menghapus data kerja?");
         if (confirmDelete) {

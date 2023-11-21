@@ -51,8 +51,8 @@ const FormLogin = () => {
       const response = await api.post("/login", data);
       if (response) {
         const expirationTimeInSeconds = 3600;
-        cookie.setItem("token", response.data.token, expirationTimeInSeconds);
-        cookie.setItem("roles", response.data.role, expirationTimeInSeconds)
+        cookie.setItem("token", response.data.token, expirationTimeInSeconds, { secure: true, httpOnly: true });
+        cookie.setItem("roles", response.data.role, expirationTimeInSeconds, { secure: true, httpOnly: true })
         if (response.data.role === "user") {
           navigate("/user");
         } if (response.data.role === "admin") {

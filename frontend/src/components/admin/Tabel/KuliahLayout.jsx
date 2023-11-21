@@ -1,55 +1,12 @@
-import { useState, React } from "react";
+import { useState, React, useEffect } from "react";
 import SidebarAdmin from "../SidebarAdmin/SidebarAdmin";
 import DataTable from "react-data-table-component";
 import FooterAdmin from "../FooterAdmin/FooterAdmin";
 import { Link } from "react-router-dom";
+import api from "../../../api";
 
 const KuliahLayout = () => {
-  const EditButton = () => (
-    <Link to={"/admin/kuliah/edit-data-kuliah"}>
-      <button
-        className="text-white flex justify-center items-center border rounded-md w-8 h-8 bg-green-700"
-        onClick={() => console.log("aku adalah aksi")}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth="1.5"
-          stroke="currentColor"
-          className="w-6 h-6"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
-          />
-        </svg>
-      </button>
-    </Link>
-  );
 
-  const DeleteButton = () => (
-    <button
-      className="text-white flex justify-center items-center border rounded-md w-8 h-8 bg-red-700 ml-2"
-      onClick={() => console.log("aku adalah delete")}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={1.5}
-        stroke="currentColor"
-        className="w-6 h-6"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-        />
-      </svg>
-    </button>
-  );
   const columns = [
     {
       name: "Nama",
@@ -63,12 +20,12 @@ const KuliahLayout = () => {
     },
     {
       name: "Nama Universitas",
-      selector: (row) => row.universitas,
+      selector: (row) => row.nama_universitas,
       sortable: true,
     },
     {
       name: "Jurusan",
-      selector: (row) => row.jurusan,
+      selector: (row) => row.prodi,
       sortable: true,
     },
     {
@@ -81,159 +38,99 @@ const KuliahLayout = () => {
       name: "Aksi",
       cell: (row) => (
         <>
-          <EditButton />
-          <DeleteButton />
+          {/* edit */}
+          <Link to={`/admin/kuliah/edit-data-kuliah/${row.user}`}>
+            <button
+              className="text-white flex justify-center items-center border rounded-md w-8 h-8 bg-green-700"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+                />
+              </svg>
+            </button>
+          </Link>
+          {/* delete */}
+          <button
+            className="text-white flex justify-center items-center border rounded-md w-8 h-8 bg-red-700 ml-2"
+            onClick={() => handleDelete(row.user)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+              />
+            </svg>
+          </button>
         </>
       ),
     },
   ];
 
-  const item = [
-    {
-      id: 1,
-      nama: "Beetlejuice",
-      angkatan: "1988",
-      universitas: "SanataDharma",
-      jurusan: "ABC",
-      jenjang: "S1",
-    },
-    {
-      id: 2,
-      nama: "Ghostbusters",
-      angkatan: "1988",
-      universitas: "PPPP",
-      jurusan: "ZCXZC",
-      jenjang: "S3",
-    },
-    {
-      id: 3,
-      nama: "Abigail",
-      angkatan: "1988",
-      universitas: "PoliceLine",
-      jurusan: "Polantas",
-      jenjang: "D3",
-    },
-    {
-      id: 4,
-      nama: "ThornPrincess",
-      angkatan: "1988",
-      universitas: "Disitu",
-      jurusan: "kemana",
-      jenjang: "S2",
-    },
-    {
-      id: 5,
-      nama: "Beetlejuice",
-      angkatan: "1988",
-      universitas: "SanataDharma",
-      jurusan: "ABC",
-      jenjang: "S1",
-    },
-    {
-      id: 6,
-      nama: "Ghostbusters",
-      angkatan: "1988",
-      universitas: "Disitu",
-      jurusan: "kemana",
-      jenjang: "S2",
-    },
-    {
-      id: 7,
-      nama: "Abigail",
-      angkatan: "1988",
-      universitas: "PoliceLine",
-      jurusan: "Polantas",
-      jenjang: "D3",
-    },
-    {
-      id: 8,
-      nama: "ThornPrincess",
-      angkatan: "1988",
-      universitas: "SanataDharma",
-      jurusan: "ABC",
-      jenjang: "S1",
-    },
-    {
-      id: 9,
-      nama: "Beetlejuice",
-      angkatan: "1988",
-      universitas: "Disitu",
-      jurusan: "kemana",
-      jenjang: "S2",
-    },
-    {
-      id: 10,
-      nama: "Ghostbusters",
-      angkatan: "1988",
-      universitas: "PoliceLine",
-      jurusan: "Polantas",
-      jenjang: "D3",
-    },
-    {
-      id: 11,
-      nama: "Abigail",
-      angkatan: "1988",
-      universitas: "SanataDharma",
-      jurusan: "ABC",
-      jenjang: "S1",
-    },
-    {
-      id: 12,
-      nama: "ThornPrincess",
-      angkatan: "1988",
-      universitas: "PoliceLine",
-      jurusan: "Polantas",
-      jenjang: "D3",
-    },
-    {
-      id: 13,
-      nama: "Beetlejuice",
-      angkatan: "1988",
-      universitas: "Disitu",
-      jurusan: "kemana",
-      jenjang: "S2",
-    },
-    {
-      id: 14,
-      nama: "Ghostbusters",
-      angkatan: "1988",
-      universitas: "PoliceLine",
-      jurusan: "Polantas",
-      jenjang: "D3",
-    },
-    {
-      id: 15,
-      nama: "Woy",
-      angkatan: "1988",
-      universitas: "SanataDharma",
-      jurusan: "ABC",
-      jenjang: "S1",
-    },
-    {
-      id: 16,
-      nama: "ThornPrincess",
-      angkatan: "1988",
-      universitas: "PoliceLine",
-      jurusan: "Polantas",
-      jenjang: "D3",
-    },
-  ];
+  const [data, setData] = useState([]);
+  const [pending, setPending] = useState(true);
+  const [filter, setFilter] = useState('');
 
-  const [records, setRecords] = useState(item);
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Apakah Anda yakin ingin menghapus data kerja?");
+    if (confirmDelete) {
+      try {
+        await api.delete(`/kuliah/${id}`)
+        window.location.reload()
+      } catch (error) {
+        console.error(error)
+      }
+    }
+  }
+
   const handleFilter = (e) => {
     const value = e.target.value.toLowerCase();
-    const newData = item.filter((row) => {
+    const newData = data.filter((row) => {
       return (
         row.nama.toLowerCase().includes(value) ||
         row.angkatan.toString().toLowerCase().includes(value) ||
-        row.universitas.toLowerCase().includes(value) ||
-        row.jurusan.toLowerCase().includes(value) ||
+        row.nama_universitas.toLowerCase().includes(value) ||
+        row.prodi.toLowerCase().includes(value) ||
         row.jenjang.toLowerCase().includes(value)
       );
     });
-    setRecords(newData);
+    setFilter(newData);
   };
 
+  const readAllKuliah = async () => {
+    try {
+      const response = await api.get('/kuliah/all');
+      setData(response.data.data);
+      setFilter(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setPending(false);
+      readAllKuliah();
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, []);
   return (
     <div>
       <SidebarAdmin />
@@ -249,7 +146,8 @@ const KuliahLayout = () => {
         </div>
         <DataTable
           columns={columns}
-          data={records}
+          data={filter}
+          progressPending={pending}
           fixedHeader
           fixedHeaderScrollHeight="450px"
           pagination

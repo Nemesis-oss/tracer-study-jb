@@ -13,7 +13,6 @@ import KerjaKuliahUser from "./pages/user/KerjaKuliah";
 import MencariKerjaUser from "./pages/user/MencariKerja";
 import UsahaUser from "./pages/user/Usaha";
 import KuliahUser from "./pages/user/Kuliah";
-import HomeAdmin from "./components/admin/HomeAdmin";
 import FormKuliah from "./pages/user/FormKuliah";
 import FormKerja from "./pages/user/FormKerja";
 import FormKuliahKerja from "./pages/user/FormKuliahKerja";
@@ -24,7 +23,6 @@ import EditKerja from "./pages/user/editKerja";
 import EditKuliahKerja from "./pages/user/EditKuliahKerja";
 import EditMencariKerja from "./pages/user/EditMencariKerja";
 import EditUsaha from "./pages/user/EditUsaha";
-
 import UbahDataIjazah from "./pages/admin/UbahDataIjazah";
 import FormInputIjazah from "./pages/admin/FormInputIjazah";
 import DaftarUser from "./pages/admin/DaftarUser";
@@ -56,7 +54,6 @@ export {
   MencariKerjaUser,
   UsahaUser,
   KuliahUser,
-  HomeAdmin,
   FormKuliah,
   FormKerja,
   FormKuliahKerja,

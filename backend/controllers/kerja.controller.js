@@ -70,15 +70,44 @@ export const readKerjaByToken = async (req, res) => {
   });
 };
 
+export const readKerjaByAdmin = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const kerja = await Kerja.findOne({ user: userId });
+    return res.status(201).json({
+      status: true,
+      data: kerja,
+    });
+  } catch (error) {
+    return res.status(401).json({
+      status: false,
+      data: error,
+    });
+  }
+};
+
 export const updateKerja = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const { pendidikan_terakhir, nama_perusahaan, jabatan, tahun_kerja } =
-      req.body;
+    const {
+      nama,
+      angkatan,
+      pendidikan_terakhir,
+      nama_perusahaan,
+      jabatan,
+      tahun_kerja,
+    } = req.body;
 
     const kerja = await Kerja.findOneAndUpdate(
       { user: userId },
-      { pendidikan_terakhir, nama_perusahaan, jabatan, tahun_kerja },
+      {
+        nama,
+        angkatan,
+        pendidikan_terakhir,
+        nama_perusahaan,
+        jabatan,
+        tahun_kerja,
+      },
       { new: true }
     );
 
@@ -115,7 +144,7 @@ export const deleteKerja = async (req, res) => {
     return res.status(201).json({
       status: true,
       message: "Data berhasil di hapus",
-      data:kerja
+      data: kerja,
     });
   } catch (error) {
     return res.status(404).json({

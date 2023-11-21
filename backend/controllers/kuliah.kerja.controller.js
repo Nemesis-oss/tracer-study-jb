@@ -55,7 +55,7 @@ export const createKuliahKerja = async (req, res) => {
     });
   }
 };
-
+ 
 export const readAllKuliahKerja = async (req, res) => {
   try {
     const kuliahKerja = await KuliahKerja.find();
@@ -87,10 +87,28 @@ export const readSingleKuliahKerja = async (req, res) => {
   }
 };
 
+export const readKuliahKerjaByAdmin = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const kuliahKerja = await KuliahKerja.findOne({ user: userId });
+    return res.status(201).json({
+      status: true,
+      data: kuliahKerja,
+    });
+  } catch (error) {
+    return res.status(401).json({
+      status: false,
+      data: error,
+    });
+  }
+};
+
 export const updateKuliahKerja = async (req, res) => {
   try {
     const userId = req.params.userId;
     const {
+      nama,
+      angkatan,
       nama_perusahaan,
       jabatan,
       tahun_kerja,
@@ -102,6 +120,8 @@ export const updateKuliahKerja = async (req, res) => {
     const kuliahKerja = await KuliahKerja.findOneAndUpdate(
       { user: userId },
       {
+        nama,
+        angkatan,
         nama_perusahaan,
         nama_universitas,
         jabatan,

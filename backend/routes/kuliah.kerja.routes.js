@@ -3,6 +3,7 @@ import {
   createKuliahKerja,
   deleteKuliahKerja,
   readAllKuliahKerja,
+  readKuliahKerjaByAdmin,
   readSingleKuliahKerja,
   updateKuliahKerja,
 } from "../controllers/kuliah.kerja.controller.js";
@@ -23,6 +24,7 @@ router.post(
 );
 router.get("/kuliah-kerja/all", readAllKuliahKerja);
 router.get("/kuliah-kerja", midleware, readSingleKuliahKerja);
+router.get("/kuliah-kerja/:userId", readKuliahKerjaByAdmin);
 router.put(
   "/kuliah-kerja/:userId",
   validationKuliahKerja,

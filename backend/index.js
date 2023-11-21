@@ -7,6 +7,7 @@ import routerKerja from "./routes/kerja.routes.js";
 import routerKuliahKerja from "./routes/kuliah.kerja.routes.js";
 import routerMencariKerja from "./routes/mencari.kerja.routes.js";
 import routerUsaha from "./routes/usaha.routes.js";
+import routerGrafik from "./routes/grafik.routes.js"
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -41,6 +42,7 @@ app.use(routerKerja);
 app.use(routerKuliahKerja);
 app.use(routerMencariKerja);
 app.use(routerUsaha);
+app.use(routerGrafik)
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: "Terjadi kesalahan dalam server." });

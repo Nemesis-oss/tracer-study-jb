@@ -5,11 +5,12 @@ import {
   forgetPassword,
   resetPassword,
   getUsers,
-  // saveUser,
   getSingleUsers,
   updateUser,
   deleteUser,
   changePassword,
+  updateUserByAdmin,
+  getSingleUserByAdmin,
 } from "../controllers/user.controller.js";
 import {
   runValidation,
@@ -45,8 +46,12 @@ router.get("/users", getUsers); // memanggil semua data user
 
 router.get("/singleuser", midleware, getSingleUsers); // memanggil 1 data user berdasarkan id
 
+router.get("/single-user-by-admin/:id", getSingleUserByAdmin);
+
 router.patch("/updateuser/", validationUpdate, runValidation, updateUser); //berfungsi untuk mengupdate data user
 
-router.delete("/users/", deleteUser); //berfungsi untuk menghapus data user
+router.put("/update-user-by-admin/:id", updateUserByAdmin);
+
+router.delete("/users/:id", deleteUser); //berfungsi untuk menghapus data user
 
 export default router;

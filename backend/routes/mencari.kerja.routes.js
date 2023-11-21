@@ -3,6 +3,7 @@ import {
   createMencariKerja,
   deleteMencariKerja,
   readAllMencariKerja,
+  readMencariKerjaByAdmin,
   readSingleMencariKerja,
   updateMencariKerja,
 } from "../controllers/mencari.kerja.controller.js";
@@ -21,6 +22,7 @@ router.post(
 );
 router.get("/mencari-kerja/all", readAllMencariKerja);
 router.get("/mencari-kerja", midleware, readSingleMencariKerja);
+router.get("/mencari-kerja/:userId", readMencariKerjaByAdmin)
 router.put(
   "/mencari-kerja/:userId",
   validationMencariKerja,

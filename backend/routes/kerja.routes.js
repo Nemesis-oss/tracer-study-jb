@@ -4,6 +4,7 @@ import {
   createKerja,
   deleteKerja,
   readAllKerja,
+  readKerjaByAdmin,
   readKerjaByToken,
   updateKerja,
 } from "../controllers/kerja.controller.js";
@@ -17,6 +18,7 @@ const router = express.Router();
 router.post("/kerja/:userId", validationKerja, runValidation, createKerja);
 router.get("/kerja/all", readAllKerja);
 router.get("/kerja", midleware, readKerjaByToken);
+router.get("/kerja/:userId", readKerjaByAdmin);
 router.put("/kerja/:userId", validationKerja, runValidation, updateKerja);
 router.delete("/kerja/:userId", deleteKerja);
 

@@ -5,6 +5,7 @@ import {
   updateKuliah,
   deleteKuliah,
   getAll,
+  readKuliahByAdmin,
 } from "../controllers/kuliah.controller.js";
 
 import midleware from "../middleware/user.midleware.js";
@@ -23,8 +24,10 @@ router.get("/kuliah/all", getAll);
 // Rute untuk mendapatkan data kuliah berdasarkan ID pengguna
 router.get("/kuliah", midleware, getKuliahByToken);
 
+router.get("/kuliah/:userId", readKuliahByAdmin);
+
 // Rute untuk memperbarui data kuliah
-router.put("/kuliah/:userId", validationKuliah,runValidation ,updateKuliah);
+router.put("/kuliah/:userId", validationKuliah, runValidation, updateKuliah);
 
 // Rute untuk menghapus data kuliah
 router.delete("/kuliah/:userId", deleteKuliah);

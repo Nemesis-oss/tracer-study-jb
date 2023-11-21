@@ -238,6 +238,29 @@ export const getSingleUsers = async (req, res) => {
   });
 };
 
+export const getSingleUserByAdmin = async (req,res) => {
+  try {
+    const id = req.params.id;
+    const user = await User.findOne({ _id: id });
+    if (!user) {
+      return res.status(404).json({
+        status: false,
+        message: "data tidak ditemukan"
+      });
+    }
+    return res.status(201).json({
+      status: true,
+      data: user,
+    });
+  } catch (error) {
+    return res.status(401).json({
+      status: false,
+      message: "Kesalahan pada query",
+      data: error,
+    });
+  }
+}
+
 export const updateUser = async (req, res) => {
   try {
     const token = req.headers.authorization;
@@ -276,6 +299,48 @@ export const updateUser = async (req, res) => {
     });
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+};
+
+export const updateUserByAdmin = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const {
+      nama,
+      tanggal_lahir,
+      nomor_ijazah,
+      jurusan,
+      angkatan,
+      email,
+      nomor_WA,
+      username,
+    } = req.body;
+    const user = await User.findOneAndUpdate(
+      { _id: id },
+      {
+        nama,
+        tanggal_lahir,
+        nomor_ijazah,
+        jurusan,
+        angkatan,
+        email,
+        nomor_WA,
+        username,
+      },
+      { new: true }
+    );
+
+    return res.status(201).json({
+      status: true,
+      message: "Data berhasil diupdate",
+      data: user,
+    });
+  } catch (error) {
+    return res.status(401).json({
+      status: false,
+      message: "Kesalahan pada query",
+      data: error,
+    });
   }
 };
 

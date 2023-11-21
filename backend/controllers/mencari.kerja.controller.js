@@ -11,7 +11,7 @@ export const createMencariKerja = async (req, res) => {
         status: false,
         message: "Data user tidak ditemukan",
       });
-    }
+    } 
 
     const mencariKerja = new MencariKerja({
       user: userId,
@@ -77,19 +77,36 @@ export const readSingleMencariKerja = async (req, res) => {
   }
 };
 
+export const readMencariKerjaByAdmin = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const mencariKerja = await MencariKerja.findOne({ user: userId });
+    return res.status(201).json({
+      status: true,
+      data: mencariKerja,
+    });
+  } catch (error) {
+    return res.status(401).json({
+      status: false,
+      data: error,
+    });
+  }
+};
+
 export const updateMencariKerja = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const { pendidikan_akhir, alamat, alasan, email } = req.body;
+    const { nama, angkatan, pendidikan_akhir, alamat, alasan, email } =
+      req.body;
     const mencariKerja = await MencariKerja.findOneAndUpdate(
       { user: userId },
-      { pendidikan_akhir, alamat, alasan, email },
+      { nama, angkatan, pendidikan_akhir, alamat, alasan, email },
       { new: true }
     );
     return res.status(201).json({
       status: true,
       message: "Data berhasil diupdate",
-      data:mencariKerja
+      data: mencariKerja,
     });
   } catch (error) {
     return res.status(401).json({
@@ -115,4 +132,3 @@ export const deleteMencariKerja = async (req, res) => {
     });
   }
 };
-
