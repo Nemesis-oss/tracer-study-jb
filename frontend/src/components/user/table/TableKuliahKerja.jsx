@@ -1,139 +1,133 @@
 import { React, useEffect, useState } from 'react';
-import DataTable from "react-data-table-component";
 import api from '../../../api';
+import { Pagination } from 'antd';
 
 const TableKuliahKerja = () => {
-    const columns = [
-        {
-            name: "Nama",
-            sortable: true,
-            selector: row => row.nama,
-            cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.nama}</div>,
+    const [kuliahKerja, setKuliahKerja] = useState([]);
+    const [total, setTotal] = useState("");
+    const [page, setPage] = useState(1);
+    const [postPerPage, setPostPerpage] = useState(10);
+    const [search, setSearch] = useState("");
 
-        },
-        {
-            name: "Angkatan",
-            sortable: true,
-            selector: row => row.angkatan,
-            cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.angkatan}</div>,
-
-        },
-        {
-            name: "Nama Perusahaan",
-            sortable: true,
-            selector: row => row.nama_perusahaan,
-            cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.nama_perusahaan}</div>,
-
-        },
-        {
-            name: "Jabatan",
-            sortable: true,
-            selector: row => row.jabatan,
-            cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.jabatan}</div>,
-
-        },
-        {
-            name: "Tahun Kerja",
-            sortable: true,
-            selector: row => row.tahun_kerja
-        },
-        {
-            name: "Universitas",
-            sortable: true,
-            selector: row => row.nama_universitas,
-            cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.nama_universitas}</div>,
-
-        },
-        {
-            name: "Program Studi",
-            sortable: true,
-            selector: row => row.prodi,
-            cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.prodi}</div>,
-
-        },
-        {
-            name: "Jenjang",
-            sortable: true,
-            selector: row => row.jenjang
-        },
-    ];
-
-    const [data, setData] = useState([]);
-    const [pending, setPending] = useState(true);
-    const [filter, setFilter] = useState('');
-
-    const handleFilter = (e) => {
-        const value = e.target.value.toLowerCase();
-        const filterData = data.filter((row) => {
-            return (
-                row.nama.toLowerCase().includes(value) ||
-                row.angkatan.toString().toLowerCase().includes(value) ||
-                row.nama_universitas.toLowerCase().includes(value) ||
-                row.prodi.toLowerCase().includes(value) ||
-                row.jenjang.toLowerCase().includes(value) ||
-                row.nama_perusahaan.toLowerCase().includes(value) ||
-                row.jabatan.toLowerCase().includes(value) ||
-                row.tahun_kerja.toString().toLowerCase().includes(value)
-            );
-        });
-        setFilter(filterData);
-    };
-
-    const readAllKuliah = async () => {
+    const readAll = async () => {
         try {
             const response = await api.get('/kuliah-kerja/all');
-            setData(response.data.data);
-            setFilter(response.data.data);
-
+            const kuliahKerja = response.data.data
+            setKuliahKerja(kuliahKerja);
+            setTotal(kuliahKerja.length);
         } catch (error) {
             console.log(error);
         }
     };
 
+    const lastPage = page * postPerPage;
+    const firstPage = lastPage - postPerPage;
+    const currentPost = kuliahKerja.slice(firstPage, lastPage);
+
 
     useEffect(() => {
-        const timeout = setTimeout(() => {
-            setPending(false);
-            readAllKuliah();
-        }, 1000);
-        return () => clearTimeout(timeout);
+        readAll();
     }, []);
 
-    const customStyles = {
-        headRow: {
-            style: {
-                backgroundColor: "#0D98BA",
-                color: "white",
-            }
-        },
-        headCells: {
-            style: {
-                fontSize: "15px",
-                textTransform: "uppercase"
-            }
-        },
-        cells: {
-            style: {
-                fontSize: "15px",
-            }
+    const determineColumns = () => {
+        return total <= 3 ? 'md:flex justify-center' : 'md:grid-cols-5';
+    };
+
+    const onShowSizeChange = (current, pageSize) => {
+        const lastPage = Math.ceil(total / pageSize);
+        setPage(page > lastPage ? lastPage : page);
+        setPostPerpage(pageSize);
+    }
+
+    const itemRender = (current, type, originalElement) => {
+        if (type === "prev" || type === "next") {
+            return <a>{type === "prev" ? "Previous" : "Next"}</a>;
         }
+        return originalElement;
+    }
+
+    const handleSearchChange = (e) => {
+        setSearch(e.target.value.toLowerCase());
     };
 
     return (
-        <div className='p-5'>
-            <div className='text-end mb-2'>
-                <input type="text" className=" border text-gray-900 sm:text-sm p-1.5  dark:border-gray-600 dark:placeholder-gray-400 dark:text-black" placeholder='Search...' onChange={handleFilter} />
+        <div className='m-5'>
+            <div className='flex justify-center'>
+                <div className='relative'>
+                    <input
+                        type="text"
+                        className='rounded-full m-3 pl-3 pr-10 border text-gray-900 sm:text-sm p-1.5 dark:border-gray-600'
+                        placeholder='Search...'
+                        onChange={handleSearchChange}
+                    />
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="absolute top-1/2 transform -translate-y-1/2 right-5 w-5 h-5"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                        />
+                    </svg>
+                </div>
             </div>
-            <DataTable
-                columns={columns}
-                data={filter}
-                customStyles={customStyles}
-                progressPending={pending}
-                pagination
-                fixedHeader
-            />
+            <div className={`grid grid-cols-1 ${determineColumns()} gap-4 mt-5`}>
+                {currentPost.filter(
+                    (e) =>
+                        e.nama.toLowerCase().includes(search) ||
+                        e.angkatan.toString().toLowerCase().includes(search) ||
+                        e.nama_perusahaan.toLowerCase().includes(search) ||
+                        e.jabatan.toLowerCase().includes(search) ||
+                        e.jabatan.toLowerCase().includes(search) ||
+                        e.nama_universitas.toLowerCase().includes(search) ||
+                        e.prodi.toLowerCase().includes(search) ||
+                        e.jenjang.toLowerCase().includes(search)
+
+                ).map((kuliahKerja) => (
+                    <div key={kuliahKerja.user} className="w-full max-w-sm border shadow-lg shadow-cyan-950/50 relative transition transform hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:transform-none">
+                        <div className="h-40 relative">
+                            <div className="bg-gradient-to-b from-cyan-950 to-white h-full"></div>
+                            <img
+                                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full shadow-lg border border-cyan-700"
+                                src={kuliahKerja.urlGambar} 
+                                alt={kuliahKerja.nama}
+                            />
+                        </div>
+                        <div className="flex flex-col items-center pb-10 pt-10 bg-white">
+                            <h5 className="mb-1 text-center text-2xl font-medium dark:text-[#F6B352]">
+                                {kuliahKerja.nama}
+                            </h5>
+                            <span className="text-base text-center">Angkatan <a className='font-semibold'>{kuliahKerja.angkatan}</a></span>
+                            <span className="text-base text-center">Kelompok Kerja <a className='font-semibold'>{kuliahKerja.nama_perusahaan}</a></span>
+                            <span className="text-base text-center">Jenis Pekerjaan <a className='font-semibold'>{kuliahKerja.jabatan}</a></span>
+                            <span className="text-base text-center">Tahun Kerja <a className='font-semibold'>{kuliahKerja.tahun_kerja}</a></span>
+                            <span className="text-base text-center">Kampus <a className='font-semibold'>{kuliahKerja.nama_universitas}</a></span>
+                            <span className="text-base text-center">Program Studi <a className='font-semibold'>{kuliahKerja.prodi}</a></span>
+                            <span className="text-base text-center">Jenjang <a className='font-semibold'>{kuliahKerja.jenjang}</a></span>
+                        </div>
+                    </div>
+                ))}
+            </div>
+            {/* Pagination */}
+            <div className='text-center mt-6'>
+                <Pagination
+                    onChange={(value) => setPage(value)}
+                    pageSize={postPerPage}
+                    total={total}
+                    current={page}
+                    showSizeChanger
+                    showQuickJumper
+                    onShowSizeChange={onShowSizeChange}
+                    itemRender={itemRender}
+                />
+            </div>
         </div>
     );
-};
+}
 
 export default TableKuliahKerja;

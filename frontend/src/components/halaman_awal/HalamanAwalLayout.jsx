@@ -21,9 +21,9 @@ const HalamanAwalLayout = () => {
       <div>
         <AnimatedSignUp />
       </div>
-      <div>
+      {/* <div>
         <UserReview />
-      </div>
+      </div> */}
       <div>
         <Footer />
       </div>

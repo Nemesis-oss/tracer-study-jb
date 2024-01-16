@@ -26,13 +26,13 @@ const KerjaLayout = () => {
       selector: row => row.pendidikan_terakhir,
     },
     {
-      name: "Nama Perusahaan",
+      name: "Kategori Pekerjaan",
       sortable: true,
       selector: row => row.nama_perusahaan,
       cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.nama_perusahaan}</div>,
     },
     {
-      name: "Jabatan",
+      name: "Jenis Pekerjaan",
       sortable: true,
       selector: row => row.jabatan,
       cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.jabatan}</div>,

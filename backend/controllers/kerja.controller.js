@@ -1,5 +1,6 @@
 import Kerja from "../models/kerja.model.js";
 import User from "../models/user.models.js";
+import fs from "fs";
 
 export const createKerja = async (req, res) => {
   try {
@@ -22,6 +23,10 @@ export const createKerja = async (req, res) => {
       jabatan: jabatan,
       tahun_kerja: tahun_kerja,
       jenis: "Kerja",
+      gambar: req.file ? req.file.path : null,
+      urlGambar: req.file
+        ? `${req.protocol}://${req.get("host")}/${req.file.path}`
+        : null,
     });
 
     const cekKerja = await Kerja.findOne({ user: user });
@@ -31,11 +36,11 @@ export const createKerja = async (req, res) => {
       });
     }
 
-    kerja.save();
+    const result = await kerja.save();
     return res.status(201).json({
       status: true,
       message: "Data berhasil ditambahkan",
-      data: kerja,
+      data: result,
     });
   } catch (error) {
     return res.status(400).json({
@@ -98,7 +103,7 @@ export const updateKerja = async (req, res) => {
       tahun_kerja,
     } = req.body;
 
-    const kerja = await Kerja.findOneAndUpdate(
+    let kerja = await Kerja.findOneAndUpdate(
       { user: userId },
       {
         nama,
@@ -117,6 +122,18 @@ export const updateKerja = async (req, res) => {
         message: "Data tidak ditemukan",
       });
     }
+
+    if (req.file && kerja.gambar) {
+      fs.unlinkSync(kerja.gambar);
+    }
+
+    // Jika ada file gambar yang diupload, perbarui juga field gambar dan urlGambar
+    if (req.file) {
+      kerja.gambar = req.file.path;
+      kerja.urlGambar = `${req.protocol}://${req.get("host")}/${req.file.path}`;
+    }
+    kerja = await kerja.save();
+
     return res.status(201).json({
       status: true,
       message: "Data berhasil diupdate",
@@ -133,7 +150,8 @@ export const updateKerja = async (req, res) => {
 export const deleteKerja = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const kerja = await Kerja.deleteOne({ user: userId });
+
+    const kerja = await Kerja.findOne({ user: userId });
 
     if (!kerja) {
       return res.status(401).json({
@@ -141,6 +159,18 @@ export const deleteKerja = async (req, res) => {
         message: "Data tidak ditemukan",
       });
     }
+
+    // Langkah 2: Hapus gambar fisik jika ada
+    if (kerja.gambar) {
+      fs.unlinkSync(kerja.gambar);
+    }
+
+    // Langkah 3: Hapus dokumen dari basis data
+    const result = await Kerja.deleteOne({ user: userId });
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: "Data kerja tidak ditemukan." });
+    }
+
     return res.status(201).json({
       status: true,
       message: "Data berhasil di hapus",

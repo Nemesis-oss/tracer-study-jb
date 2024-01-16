@@ -29,6 +29,14 @@ const usahaSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  gambar: {
+    type: String,
+    required: true,
+  },
+  urlGambar: {
+    type: String,
+    required: false,
+  },
   jenis: {
     type: String,
     enum: ["Usaha"],

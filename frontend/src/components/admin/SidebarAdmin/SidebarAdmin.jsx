@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import img from "../../../images/profile.png";
-import cookie from "js-cookies"
+import cookie from "js-cookie"
 const SidebarAdmin = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdown] = useState(false);
@@ -24,8 +24,8 @@ const SidebarAdmin = () => {
 
   const handleClickLogout = (e) => {
     e.preventDefault()
-    cookie.removeItem("token");
-    cookie.removeItem("roles");
+    cookie.remove("token",{path:'/'});
+    cookie.remove("roles", {path:'/'});
     navigator("/", { replace: true });
   };
 

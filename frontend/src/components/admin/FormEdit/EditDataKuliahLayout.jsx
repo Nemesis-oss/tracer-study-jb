@@ -9,6 +9,11 @@ const EditDataKuliahLayout = () => {
   const [jurusan, setJurusan] = useState("");
   const [jenjang, setJenjang] = useState("");
   const [error, setError] = useState("")
+  const [filter, setFilter] = useState([]);
+  const [filteredUniversities, setFilteredUniversities] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(true);
+  const [inputValue, setInputValue] = useState('');
+
 
   const { userId } = useParams()
   const navigate = useNavigate()
@@ -22,8 +27,23 @@ const EditDataKuliahLayout = () => {
     setAngkatan(value);
   };
   const handleChangeNamaUniversitas = (e) => {
-    const value = e.target.value;
-    setNamaUniversitas(value);
+    const value = e.target.value.toLowerCase();
+    setInputValue(value);
+
+    if (!value.trim()) {
+      setFilteredUniversities([]);
+      setShowDropdown(true);
+      return;
+    }
+
+    const filtered = filter.filter((university) =>
+      typeof university === 'string' && university.toLowerCase().includes(value)
+    );
+
+    const limitedFiltered = filtered.slice(0, 5);
+
+    setFilteredUniversities(limitedFiltered);
+    setShowDropdown(limitedFiltered.length > 0);
   };
   const handleChangeJurusan = (e) => {
     const value = e.target.value;
@@ -65,13 +85,31 @@ const EditDataKuliahLayout = () => {
       setNamaUniversitas(dataKuliah.nama_universitas)
       setJurusan(dataKuliah.prodi)
       setJenjang(dataKuliah.jenjang)
+      setInputValue(dataKuliah.nama_universitas)
     } catch (error) {
 
     }
   }
+
+  const readUniv = async () => {
+    try {
+      const response = await api.get("/univ");
+      const univNames = response.data.data.map((university) => university.nama_universitas);
+      setFilter(univNames);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
+    readUniv()
     readSingleKuliah()
   }, [])
+
+  useEffect(() => {
+    setInputValue(namaUniversitas);
+  }, [namaUniversitas]);
+
   return (
     <section className="relative">
       {/* gambar background */}
@@ -130,24 +168,36 @@ const EditDataKuliahLayout = () => {
                 />
               </div>
 
-              {/* Nama Universitas*/}
+              {/* Universitas */}
               <div>
-                <label
-                  htmlFor="namaUniversitas"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-                >
-                  Nama Universitas
-                </label>
+                <label htmlFor="univ" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Nama Universitas</label>
                 <input
                   type="text"
-                  name="namaUniversitas"
-                  id="namaUniversitas"
+                  name="univ"
+                  id="univ"
+                  autoComplete="off"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Masukan Nama Universitas"
-                  value={namaUniversitas}
+                  value={inputValue}  // Pastikan nilai inputValue disetel di sini
                   onChange={handleChangeNamaUniversitas}
                   required
                 />
+                {showDropdown && filteredUniversities.length > 0 && (
+                  <ul className="mt-1 border border-gray-300 rounded-lg absolute bg-white max-h-28 overflow-y-auto">
+                    {filteredUniversities.map((university, index) => (
+                      <li
+                        key={index}
+                        className="cursor-pointer p-2 hover:bg-gray-200"
+                        onClick={() => {
+                          setNamaUniversitas(university);
+                          setShowDropdown(false);
+                        }}
+                      >
+                        {university}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
               {/* Jurusan */}
               <div>

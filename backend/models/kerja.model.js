@@ -8,7 +8,7 @@ const kerjaSchema = new mongoose.Schema({
   nama: {
     type: String,
     required: true,
-  },
+  }, 
   angkatan: {
     type: Number,
     required: true,
@@ -29,6 +29,14 @@ const kerjaSchema = new mongoose.Schema({
   tahun_kerja: {
     type: Number,
     required: true,
+  },
+  gambar: {
+    type: String,
+    required: true,
+  },
+  urlGambar: {
+    type: String,
+    required: false,
   },
   jenis: {
     type: String,

@@ -1,5 +1,6 @@
 import Usaha from "../models/usaha.model.js";
 import User from "../models/user.models.js";
+import fs from "fs";
 
 export const createUsaha = async (req, res) => {
   try {
@@ -23,6 +24,10 @@ export const createUsaha = async (req, res) => {
       jenis_usaha: jenis_usaha,
       tahun_usaha: tahun_usaha,
       jenis: "Usaha",
+      gambar: req.file ? req.file.path : null,
+      urlGambar: req.file
+        ? `${req.protocol}://${req.get("host")}/${req.file.path}`
+        : null,
     });
 
     const cekData = await Usaha.findOne({ user: user });
@@ -104,7 +109,7 @@ export const updateUsaha = async (req, res) => {
       alamat_usaha,
       tahun_usaha,
     } = req.body;
-    const usaha = await Usaha.findOneAndUpdate(
+    let usaha = await Usaha.findOneAndUpdate(
       { user: userId },
       {
         nama,
@@ -116,6 +121,19 @@ export const updateUsaha = async (req, res) => {
       },
       { new: true }
     );
+
+    if (req.file && usaha.gambar) {
+      fs.unlinkSync(usaha.gambar);
+    }
+
+    // Jika ada file gambar yang diupload, perbarui juga field gambar dan urlGambar
+    if (req.file) {
+      usaha.gambar = req.file.path;
+      usaha.urlGambar = `${req.protocol}://${req.get("host")}/${req.file.path}`;
+    }
+
+    usaha = await usaha.save();
+
     return res.status(201).json({
       status: true,
       message: "Data berhasil diupdate",
@@ -132,7 +150,22 @@ export const updateUsaha = async (req, res) => {
 export const deleteUsaha = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const usaha = await Usaha.deleteOne({ user: userId });
+    // Langkah 1: Cari dokumen yang akan dihapus
+    const usaha = await Usaha.findOne({ user: userId });
+    if (!usaha) {
+      return res.status(404).json({ error: "Data usaha tidak ditemukan." });
+    }
+
+    // Langkah 2: Hapus gambar fisik jika ada
+    if (usaha.gambar) {
+      fs.unlinkSync(usaha.gambar);
+    }
+
+    const result = await Usaha.deleteOne({ user: userId });
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: "Data kuliah tidak ditemukan." });
+    }
+
     return res.status(202).json({
       status: true,
       message: "Data berhasil di hapus",

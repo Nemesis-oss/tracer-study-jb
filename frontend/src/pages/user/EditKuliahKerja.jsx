@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react'
 import EditKuliahKerjaLayout from '../../components/user/Edit_Form/EditKuliahKerja'
 import { useNavigate } from "react-router-dom"
-import cookie from "js-cookies"
+import cookie from "js-cookie"
 
 const EditKuliahKerja = () => {
     const navigate = useNavigate()
-    const token = cookie.getItem('token')
-    const roles = cookie.getItem('roles')
+    const token = cookie.get('token')
+    const roles = cookie.get('roles')
 
     useEffect(() => {
-        const updatedToken = cookie.getItem('token');
-        const updatedRoles = cookie.getItem('roles')
+        const updatedToken = cookie.get('token');
+        const updatedRoles = cookie.get('roles')
         if (!updatedToken) {
             navigate('/', { replace: true });
         }

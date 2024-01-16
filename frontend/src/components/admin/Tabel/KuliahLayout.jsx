@@ -12,26 +12,31 @@ const KuliahLayout = () => {
       name: "Nama",
       selector: (row) => row.nama,
       sortable: true,
+      cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.nama}</div>,
     },
     {
       name: "Angkatan",
       selector: (row) => row.angkatan,
       sortable: true,
+      cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.angkatan}</div>,
     },
     {
       name: "Nama Universitas",
       selector: (row) => row.nama_universitas,
       sortable: true,
+      cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.nama_universitas}</div>,
     },
     {
       name: "Jurusan",
       selector: (row) => row.prodi,
       sortable: true,
+      cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.prodi}</div>,
     },
     {
       name: "Jenjang",
       selector: (row) => row.jenjang,
       sortable: true,
+      cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.jenjang}</div>,
     },
 
     {

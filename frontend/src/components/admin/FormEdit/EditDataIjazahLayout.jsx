@@ -30,7 +30,7 @@ const EditDataIjazahLayout = () => {
       }
       const response = await api.put(`/ijazah/${id}`, data)
       alert('Data berhasil di update')
-      navigate('/user/ubah-data-ijazah')
+      navigate('/admin/ubah-data-ijazah')
     } catch (error) {
       setError(error.response.data.message)
     }

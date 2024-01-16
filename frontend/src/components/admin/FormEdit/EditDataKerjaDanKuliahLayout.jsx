@@ -11,7 +11,11 @@ const EditDataKerjaDanKuliahLayout = () => {
   const [namaUniversitas, setNamaUniversitas] = useState("");
   const [jurusan, setJurusan] = useState("");
   const [jenjang, setJenjang] = useState("");
-  const [error, setError] = useState("") 
+  const [error, setError] = useState("")
+  const [filter, setFilter] = useState([]);
+  const [filteredUniversities, setFilteredUniversities] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(true);
+  const [inputValue, setInputValue] = useState('');
 
   const { userId } = useParams()
   const navigate = useNavigate()
@@ -37,8 +41,23 @@ const EditDataKerjaDanKuliahLayout = () => {
     setTahunMasuk(value);
   };
   const handleChangeNamaUniversitas = (e) => {
-    const value = e.target.value;
-    setNamaUniversitas(value);
+    const value = e.target.value.toLowerCase();
+    setInputValue(value);
+
+    if (!value.trim()) {
+      setFilteredUniversities([]);
+      setShowDropdown(true);
+      return;
+    }
+
+    const filtered = filter.filter((university) =>
+      typeof university === 'string' && university.toLowerCase().includes(value)
+    );
+
+    const limitedFiltered = filtered.slice(0, 5);
+
+    setFilteredUniversities(limitedFiltered);
+    setShowDropdown(limitedFiltered.length > 0);
   };
   const handleChangeJurusan = (e) => {
     const value = e.target.value;
@@ -86,13 +105,31 @@ const EditDataKerjaDanKuliahLayout = () => {
       setNamaUniversitas(dataKerja.nama_universitas)
       setJurusan(dataKerja.prodi)
       setJenjang(dataKerja.jenjang)
+      setInputValue(dataKerja.nama_universitas)
+
     } catch (error) {
 
     }
   }
+
+  const readUniv = async () => {
+    try {
+      const response = await api.get("/univ");
+      const univNames = response.data.data.map((university) => university.nama_universitas);
+      setFilter(univNames);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
+    readUniv()
     readSingleKuliahKerja()
   }, [])
+
+  useEffect(() => {
+    setInputValue(namaUniversitas);
+  }, [namaUniversitas]);
 
   return (
     <section className="relative">
@@ -151,43 +188,25 @@ const EditDataKerjaDanKuliahLayout = () => {
                   required
                 />
               </div>
-              {/* Nama Perusahaan*/}
+              {/* Kategori Pekerjaan */}
               <div>
-                <label
-                  htmlFor="namaPerusahaan"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-                >
-                  Nama Perusahaan
-                </label>
-                <input
-                  type="text"
-                  name="namaPerusahaan"
-                  id="namaPerusahaan"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Masukan Nama Perusahaan"
-                  value={namaPerusahaan}
-                  onChange={handleNamaPerusahaan}
-                  required
-                />
+                <label htmlFor="pekerjaan" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Kategori Pekerjaan</label>
+                <select id="pekerjaan" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" value={namaPerusahaan} onChange={handleNamaPerusahaan}>
+                  <option value="" >Pilih Kategori Pekerjaan</option>
+                  <option value="Aparatur/Pejabat Negara">APARATUR/PEJABAT NEGARA</option>
+                  <option value="Tenaga Pengajar">TENAGA PENGAJAR</option>
+                  <option value="Wiraswasta">WIRASWASTA</option>
+                  <option value="Pertanian/Peternakan">PERTANIAN/PETERNAKAN</option>
+                  <option value="Nelayan">NELAYAN</option>
+                  <option value="Agama dan Kepercayaan">AGAMA DAN KEPERCAYAAN</option>
+                  <option value="Tenaga Kesehatan">TENAGA KESEHATAN</option>
+                  <option value="Lainnya">LAINNYA</option>
+                </select>
               </div>
-              {/* Jabatan */}
+              {/* Sub Pekerjaan */}
               <div>
-                <label
-                  htmlFor="jabatan"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-                >
-                  Jabatan
-                </label>
-                <input
-                  type="text"
-                  name="jabatan"
-                  id="jabatan"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Masukan Jabatan"
-                  value={jabatan}
-                  onChange={handleChangeJabatan}
-                  required
-                />
+                <label htmlFor="jabatan" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Jenis Pekerjaan</label>
+                <input type="text" name="jabatan" id="jabatan" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan Jabatan" value={jabatan} onChange={handleChangeJabatan} />
               </div>
               {/* Tahun Masuk Kerja */}
               <div>
@@ -208,24 +227,36 @@ const EditDataKerjaDanKuliahLayout = () => {
                   required
                 />
               </div>
-              {/* Nama Universitas*/}
+              {/* Universitas */}
               <div>
-                <label
-                  htmlFor="namaUniversitas"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-                >
-                  Nama Universitas
-                </label>
+                <label htmlFor="univ" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Nama Universitas</label>
                 <input
                   type="text"
-                  name="namaUniversitas"
-                  id="namaUniversitas"
+                  name="univ"
+                  id="univ"
+                  autoComplete="off"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Masukan Nama Universitas"
-                  value={namaUniversitas}
+                  value={inputValue}  // Pastikan nilai inputValue disetel di sini
                   onChange={handleChangeNamaUniversitas}
                   required
                 />
+                {showDropdown && filteredUniversities.length > 0 && (
+                  <ul className="mt-1 border border-gray-300 rounded-lg absolute bg-white max-h-28 overflow-y-auto">
+                    {filteredUniversities.map((university, index) => (
+                      <li
+                        key={index}
+                        className="cursor-pointer p-2 hover:bg-gray-200"
+                        onClick={() => {
+                          setNamaUniversitas(university);
+                          setShowDropdown(false);
+                        }}
+                      >
+                        {university}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
               {/* Jurusan */}
               <div>

@@ -60,6 +60,7 @@ export const validationKuliah = [
   check("nama_universitas", "Nama Universitas tidak boleh kosong!").notEmpty(),
   check("prodi", "Program Studi tidak boleh kosong!").notEmpty(),
   check("jenjang", "Jenjang tidak boleh kosong!").notEmpty(),
+  // check("gambar", "Harus menyertakan foto").notEmpty()
 ];
 
 export const validationKerja = [

@@ -23,8 +23,17 @@ const EditDataUserLayout = () => {
     setNama(value);
   };
   const handleChangeTgl = (e) => {
-    const isoDate = e.target.value;
-    const jsDate = new Date(isoDate);
+    const inputValue = e.target.value;
+
+    // Validasi format tanggal
+    const isValidDate = /^\d{4}-\d{2}-\d{2}$/.test(inputValue);
+
+    if (!isValidDate) {
+      console.error('Invalid date format');
+      return;
+    }
+
+    const jsDate = new Date(inputValue);
     const formattedDate = jsDate.toISOString().split('T')[0];
     setTanggalLahir(formattedDate);
   };
@@ -89,7 +98,6 @@ const EditDataUserLayout = () => {
       setEmail(dataUser.email)
       setNomorWA(dataUser.nomor_WA)
       setUsername(dataUser.username)
-      console.log("ini data user", dataUser)
     } catch (error) {
       console.error(error)
     } finally {

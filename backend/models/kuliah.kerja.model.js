@@ -38,6 +38,14 @@ const kuliahKerjaSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  gambar: {
+    type: String,
+    required: true,
+  },
+  urlGambar: {
+    type: String,
+    required: false,
+  },
   jenis: {
     type: String,
     enum: ["Kuliah & Kerja"],

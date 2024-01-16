@@ -13,42 +13,53 @@ const KerjaDanKuliahLayout = () => {
       name: "Nama",
       selector: (row) => row.nama,
       sortable: true,
+      cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.nama}</div>,
+
     },
     {
       name: "Angkatan",
       selector: (row) => row.angkatan,
       sortable: true,
+      cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.angkatan}</div>,
     },
     {
-      name: "Nama Perusahaan",
+      name: "Kategori Pekerjaan",
       selector: (row) => row.nama_perusahaan,
       sortable: true,
+      cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.nama_perusahaan}</div>,
+
     },
     {
-      name: "Jabatan",
+      name: "Jenis Pekerjaan",
       selector: (row) => row.jabatan,
       sortable: true,
+      cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.jabatan}</div>,
     },
     {
       name: "Tahun Kerja",
       selector: (row) => row.tahun_kerja,
       sortable: true,
+      cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.tahun_kerja}</div>,
     },
     ,
     {
       name: "Nama Universitas",
       selector: (row) => row.nama_universitas,
       sortable: true,
+      cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.nama_universitas}</div>,
     },
     {
       name: "Program Studi",
       selector: (row) => row.prodi,
       sortable: true,
+      cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.prodi}</div>,
+
     },
     {
       name: "Jenjang",
       selector: (row) => row.jenjang,
       sortable: true,
+      cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.jenjang}</div>,
     },
     {
       name: "Aksi",

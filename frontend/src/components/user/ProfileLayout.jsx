@@ -3,7 +3,7 @@ import Navbar from './Navbar/Navbar'
 import api from '../../api'
 import moment from 'moment';
 import ButtonDrp from './Button_Dropdown/ButtonDrp';
-import cookie from "js-cookies"
+import cookie from "js-cookie"
 // import { Link } from 'react-router-dom';
 import TableEditUser from './table/TableEditUser';
 
@@ -38,7 +38,7 @@ const ProfileLayout = () => {
     const [error, setError] = useState('')
 
 
-    const token = cookie.getItem('token');
+    const token = cookie.get('token');
 
     const handleChangeName = (e) => {
         const value = e.target.value
@@ -429,10 +429,10 @@ const ProfileLayout = () => {
                                     Jenis Tabel
                                 </th>
                                 <th scope="col" className="px-6 py-3">
-                                    Aksi
+                                    Aksi 
                                 </th>
                             </tr>
-                        </thead>
+                        </thead> 
                         {name && jenis && (
                             <TableEditUser data={[{ id, name, jenis }]} onDelete={deleteKuliah} editLink={`user/profile/edit-kuliah/${id}`} />
                         )}

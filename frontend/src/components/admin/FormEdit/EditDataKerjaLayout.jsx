@@ -13,7 +13,7 @@ const EditDataKerjaLayout = () => {
 
   const { userId } = useParams()
   const navigate = useNavigate()
- 
+
   const handleChangePendAkhir = (e) => {
     const value = e.target.value
     setPendAkhir(value)
@@ -144,22 +144,33 @@ const EditDataKerjaLayout = () => {
                 <label htmlFor="pendidikan" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Pendidikan Terakhir</label>
                 <select id="pendidikan" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" value={pendAkhir} onChange={handleChangePendAkhir}>
                   <option value="" >Pilih Pendidikan Terakhir</option>
-                  <option value="sma">SMA</option>
-                  <option value="d3">D3</option>
-                  <option value="s1">S1</option>
-                  <option value="s2">S2</option>
-                  <option value="s3">S3</option>
+                  <option value="SMA">SMA</option>
+                  <option value="D3">D3</option>
+                  <option value="S1">S1</option>
+                  <option value="S2">S2</option>
+                  <option value="S3">S3</option>
                 </select>
               </div>
-              {/* Nama Perusahaan */}
+              {/* Kategori Pekerjaan */}
               <div>
-                <label htmlFor="perusahaan" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Nama Perusahaan</label>
-                <input type="text" name="perusahaan" id="perusahaan" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan Nama Perusahaan" value={namaPerusahaan} onChange={handleNamaPerusahaan} required />
+                <label htmlFor="pekerjaan" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Kategori Pekerjaan</label>
+                <select id="pekerjaan" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" value={namaPerusahaan} onChange={handleNamaPerusahaan}>
+                  <option value="" >Pilih Kategori Pekerjaan</option>
+                  <option value="Aparatur/Pejabat Negara">APARATUR/PEJABAT NEGARA</option>
+                  <option value="Tenaga Pengajar">TENAGA PENGAJAR</option>
+                  <option value="Wiraswasta">WIRASWASTA</option>
+                  <option value="Pertanian/Peternakan">PERTANIAN/PETERNAKAN</option>
+                  <option value="Nelayan">NELAYAN</option>
+                  <option value="Agama dan Kepercayaan">AGAMA DAN KEPERCAYAAN</option>
+                  <option value="Tenaga Kesehatan">TENAGA KESEHATAN</option>
+                  <option value="Pensiunan">PENSIUNAN</option>
+                  <option value="Lainnya">LAINNYA</option>
+                </select>
               </div>
-              {/* jabatan */}
+              {/* Sub Pekerjaan */}
               <div>
-                <label htmlFor="jabatan" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Jabatan (opsional)  </label>
-                <input type="text" name="jabatan" id="jabatan" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan Jabatan" value={jabatan} onChange={handleChangeJabatan} required />
+                <label htmlFor="jabatan" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Jenis Pekerjaan</label>
+                <input type="text" name="jabatan" id="jabatan" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan Jabatan" value={jabatan} onChange={handleChangeJabatan} />
               </div>
               {/* Kapan kerja */}
               <div>

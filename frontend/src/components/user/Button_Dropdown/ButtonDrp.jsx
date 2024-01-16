@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../../../api'
-import cookie from "js-cookies"
+import cookie from "js-cookie"
 
 
 const ButtonDrp = () => {
 
-    const token = cookie.getItem('token');
+    const token = cookie.get('token');
 
     const [userData, setUserData] = useState(null);
 

@@ -66,7 +66,6 @@ router.get("/grafik-universitas", async (req, res) => {
     res.status(503).json({ error: "Internal Server Error" });
   }
 });
-
 router.get("/grafik-pekerjaan", async (req, res) => {
   try {
     const kerja = await KerjaModel.aggregate([

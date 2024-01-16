@@ -12,6 +12,7 @@ const UsahaLayout = () => {
       name: "Nama",
       selector: (row) => row.nama,
       sortable: true,
+      cell: (row) => <div style={{ whiteSpace: 'normal', height: 'auto' }}>{row.nama}</div>,
     },
     {
       name: "Angkatan",

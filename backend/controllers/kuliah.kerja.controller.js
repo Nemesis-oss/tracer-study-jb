@@ -1,5 +1,6 @@
 import KuliahKerja from "../models/kuliah.kerja.model.js";
 import User from "../models/user.models.js";
+import fs from "fs";
 
 export const createKuliahKerja = async (req, res) => {
   try {
@@ -31,6 +32,10 @@ export const createKuliahKerja = async (req, res) => {
       prodi: prodi,
       jenjang: jenjang,
       jenis: "Kuliah & Kerja",
+      gambar: req.file ? req.file.path : null,
+      urlGambar: req.file
+        ? `${req.protocol}://${req.get("host")}/${req.file.path}`
+        : null,
     });
 
     const cekData = await KuliahKerja.findOne({ user: user });
@@ -41,12 +46,12 @@ export const createKuliahKerja = async (req, res) => {
       });
     }
 
-    kuliahKerja.save();
+    const result = await kuliahKerja.save();
 
     return res.status(201).json({
       status: true,
       message: "Data berhasil ditambahkan",
-      data: kuliahKerja,
+      data: result,
     });
   } catch (error) {
     return res.status(403).json({
@@ -55,7 +60,7 @@ export const createKuliahKerja = async (req, res) => {
     });
   }
 };
- 
+
 export const readAllKuliahKerja = async (req, res) => {
   try {
     const kuliahKerja = await KuliahKerja.find();
@@ -117,7 +122,7 @@ export const updateKuliahKerja = async (req, res) => {
       jenjang,
     } = req.body;
 
-    const kuliahKerja = await KuliahKerja.findOneAndUpdate(
+    let kuliahKerja = await KuliahKerja.findOneAndUpdate(
       { user: userId },
       {
         nama,
@@ -137,6 +142,22 @@ export const updateKuliahKerja = async (req, res) => {
         message: "Data tidak ditemukan",
       });
     }
+
+    if (req.file && kuliahKerja.gambar) {
+      fs.unlinkSync(kuliahKerja.gambar);
+    }
+
+    // Jika ada file gambar yang diupload, perbarui juga field gambar dan urlGambar
+    if (req.file) {
+      kuliahKerja.gambar = req.file.path;
+      kuliahKerja.urlGambar = `${req.protocol}://${req.get("host")}/${
+        req.file.path
+      }`;
+    }
+
+    // Simpan perubahan
+    kuliahKerja = await kuliahKerja.save();
+
     return res.status(201).json({
       status: true,
       message: "Data berhasil di update",
@@ -153,13 +174,33 @@ export const updateKuliahKerja = async (req, res) => {
 export const deleteKuliahKerja = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const kuliahKerja = await KuliahKerja.deleteOne({ user: userId });
-    return res.status(202).json({
+
+    // Langkah 1: Cari dokumen yang akan dihapus
+    const kuliahKerja = await KuliahKerja.findOne({ user: userId });
+    if (!kuliahKerja) {
+      return res
+        .status(404)
+        .json({ error: "Data kuliah & kerja tidak ditemukan." });
+    }
+    // Langkah 2: Hapus gambar fisik jika ada
+    if (kuliahKerja.gambar) {
+      fs.unlinkSync(kuliahKerja.gambar);
+    }
+
+    const result = await KuliahKerja.deleteOne({ user: userId });
+    if (result.deletedCount === 0) {
+      return res
+        .status(404)
+        .json({ error: "Data kuliah & kerja tidak ditemukan." });
+    }
+
+    return res.status(201).json({
       status: true,
       message: "Data berhasil di hapus",
       data: kuliahKerja,
     });
   } catch (error) {
+    console.error(error); // Tambahkan baris ini untuk mencetak pesan kesalahan pada konsol
     return res.status(402).json({
       status: false,
       message: "error pada query",

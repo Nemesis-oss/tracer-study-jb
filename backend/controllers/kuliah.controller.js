@@ -1,8 +1,6 @@
 import Kuliah from "../models/kuliah.model.js";
 import User from "../models/user.models.js";
-import dotenv from "dotenv";
-
-dotenv.config();
+import fs from "fs";
 
 // Membuat data kuliah baru
 export const createKuliah = async (req, res) => {
@@ -25,6 +23,10 @@ export const createKuliah = async (req, res) => {
       prodi,
       jenjang,
       jenis: "Kuliah",
+      gambar: req.file ? req.file.path : null,
+      urlGambar: req.file
+        ? `${req.protocol}://${req.get("host")}/${req.file.path}`
+        : null,
     });
 
     const cekKuliah = await Kuliah.findOne({ user: user });
@@ -90,14 +92,34 @@ export const updateKuliah = async (req, res) => {
   try {
     const userId = req.params.userId;
     const { nama, angkatan, nama_universitas, prodi, jenjang } = req.body;
-    const kuliah = await Kuliah.findOneAndUpdate(
+
+    // Temukan data kuliah berdasarkan ID pengguna
+    let kuliah = await Kuliah.findOneAndUpdate(
       { user: userId },
       { nama, angkatan, nama_universitas, prodi, jenjang },
       { new: true }
     );
+    // Periksa apakah data kuliah ditemukan
     if (!kuliah) {
       return res.status(404).json({ error: "Data kuliah tidak ditemukan." });
     }
+
+    if (req.file && kuliah.gambar) {
+      fs.unlinkSync(kuliah.gambar);
+    }
+
+    // Jika ada file gambar yang diupload, perbarui juga field gambar dan urlGambar
+    if (req.file) {
+      kuliah.gambar = req.file.path;
+      kuliah.urlGambar = `${req.protocol}://${req.get("host")}/${
+        req.file.path
+      }`;
+    }
+
+    // Simpan perubahan
+    kuliah = await kuliah.save();
+
+    // Kirim data kuliah yang diperbarui sebagai respons
     res.status(200).json(kuliah);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -108,15 +130,28 @@ export const updateKuliah = async (req, res) => {
 export const deleteKuliah = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const kuliah = await Kuliah.deleteOne({ user: userId });
+
+    // Langkah 1: Cari dokumen yang akan dihapus
+    const kuliah = await Kuliah.findOne({ user: userId });
     if (!kuliah) {
       return res.status(404).json({ error: "Data kuliah tidak ditemukan." });
     }
-    return res.status(201).json({
-      message: "data berhasil dihapus",
-      data: kuliah,
+
+    // Langkah 2: Hapus gambar fisik jika ada
+    if (kuliah.gambar) {
+      fs.unlinkSync(kuliah.gambar);
+    }
+
+    // Langkah 3: Hapus dokumen dari basis data
+    const result = await Kuliah.deleteOne({ user: userId });
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ error: "Data kuliah tidak ditemukan." });
+    }
+
+    res.status(200).json({
+      message: "Data kuliah berhasil dihapus",
     });
   } catch (error) {
-    return res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error.message });
   }
 };

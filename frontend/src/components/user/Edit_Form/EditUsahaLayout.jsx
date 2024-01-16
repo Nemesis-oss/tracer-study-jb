@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import jb from '../../../images/logoJB.png'
 import api from "../../../api.js"
 import { Link, useParams, useNavigate } from 'react-router-dom'
-import cookie from "js-cookies"
+import cookie from "js-cookie"
 
 const EditUsahaLayout = () => {
   const [usaha, setUsaha] = useState('')
@@ -10,6 +10,8 @@ const EditUsahaLayout = () => {
   const [error, setError] = useState('')
   const [pendAkhir, setPendAkhir] = useState('')
   const [tahunUsaha, setTahunUsaha] = useState('')
+  const [file, setFile] = useState('')
+  const [preview, setPreview] = useState('')
 
   const handleChangePendAkhir = (e) => {
     const value = e.target.value
@@ -39,7 +41,7 @@ const EditUsahaLayout = () => {
 
   const { userId } = useParams()
   const navigate = useNavigate()
-  const token = cookie.getItem('token')
+  const token = cookie.get('token')
 
   const handleClickUpdate = async (e) => {
     e.preventDefault()
@@ -48,9 +50,14 @@ const EditUsahaLayout = () => {
         pendidikan_akhir: pendAkhir,
         alamat_usaha: alamatUsaha,
         jenis_usaha: usaha,
-        tahun_usaha: tahunUsaha
+        tahun_usaha: tahunUsaha,
+        gambar: file
       }
-      await api.put(`/usaha/${userId}`, data)
+      await api.put(`/usaha/${userId}`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
       alert('Data berhasil di update')
       navigate('/user/profile')
     } catch (error) {
@@ -58,30 +65,55 @@ const EditUsahaLayout = () => {
     } finally {
       setTimeout(() => {
         setError('')
-      }, 3000);
+      }, 5000);
     }
   }
 
-  const readSingleUsaha = async () =>{
+  const readSingleUsaha = async () => {
     try {
       const response = await api.get('/usaha', {
-          headers: {
-              'Authorization': `${token}`
-          }
+        headers: {
+          'Authorization': `${token}`
+        }
       })
       const usahData = response.data.data
       setPendAkhir(usahData.pendidikan_akhir)
       setUsaha(usahData.jenis_usaha)
       setTahunUsaha(usahData.tahun_usaha)
       setAlamat(usahData.alamat_usaha)
-  } catch (error) {
+      setPreview(usahData.urlGambar)
+      setFile(usahData.gambar)
+    } catch (error) {
 
+    }
   }
-}
 
-useEffect(() => {
-  readSingleUsaha()
-},[])
+  const loadImage = (e) => {
+    const image = e.target.files[0];
+
+    if (!image) {
+      setError("Harap pilih file gambar.");
+      setFile('');
+      setPreview('');
+      return;
+    }
+
+    const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+    if (!allowedExtensions.exec(image.name)) {
+      setError("Format file harus JPG, JPEG, atau PNG.");
+      setFile('');
+      setPreview('');
+      return;
+    }
+
+    setFile(image);
+    setPreview(URL.createObjectURL(image));
+    setError('');
+  }
+
+  useEffect(() => {
+    readSingleUsaha()
+  }, [])
 
 
   return (
@@ -116,11 +148,11 @@ useEffect(() => {
                 <label htmlFor="pendidikan" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Pendidikan Terakhir</label>
                 <select id="pendidikan" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" value={pendAkhir} onChange={handleChangePendAkhir}>
                   <option value="" >Pilih Pendidikan Terakhir</option>
-                  <option value="sma">SMA</option>
-                  <option value="d3">D3</option>
-                  <option value="s1">S1</option>
-                  <option value="s2">S2</option>
-                  <option value="s3">S3</option>
+                  <option value="SMA">SMA</option>
+                  <option value="D3">D3</option>
+                  <option value="S1">S1</option>
+                  <option value="S2">S2</option>
+                  <option value="S3">S3</option>
                 </select>
               </div>
               {/* Jenis Usaha */}
@@ -139,6 +171,20 @@ useEffect(() => {
                 <input type="number" name="tahun" id="tahun" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan Tahun Usaha (2019)" value={tahunUsaha} onChange={handleChangeTahunUsaha} required
                 />
               </div>
+              {/* upload foto */}
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-black" htmlFor="file_input">Upload Foto</label>
+                <input className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="file_input" type="file" onChange={loadImage} />
+                <p className="mt-1 text-sm text-gray-500 dark:text-red-600" id="file_input_help">PNG, JPG or JPEG.</p>
+              </div>
+              {/* Preview */}
+              {preview ? (
+                <figure className=''>
+                  <img src={preview} alt="preview image" />
+                </figure>
+              ) : (
+                ""
+              )}
               {/* {/* button regis */}
               <div className='flex gap-2'>
                 <button type='submit' className=" bg-gray-300  text-center

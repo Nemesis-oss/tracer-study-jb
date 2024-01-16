@@ -17,7 +17,6 @@ const ChartAdmin = () => {
 
       const angkatanResponse = await api.get("/grafik-angkatan");
       setAngkatanData(angkatanResponse.data);
-      console.log(angkatanResponse.data)
 
       const univResponse = await api.get("/grafik-universitas")
       setUnivData(univResponse.data)
@@ -28,6 +27,12 @@ const ChartAdmin = () => {
       console.error("Error fetching data counts:", error);
     }
   };
+
+  // Urutkan data berdasarkan jumlah secara descending
+  univData.sort((a, b) => b.count - a.count);
+
+  // Gunakan hanya 5 data teratas
+  const top5UnivData = univData.slice(0, 5);
 
   useEffect(() => {
     readGrafik();
@@ -166,16 +171,16 @@ const ChartAdmin = () => {
         {/* Grafik Universitas */}
         <div className="p-3 border-2 shadow-xl">
           <h1 className="font-semibold text-[#4e80ee] text-bold">
-            Grafik Universitas{" "}
+            Grafik 5 Universitas Terbanyak 
           </h1>
           <TEChart
             type="bar"
             data={{
-              labels: univData.map((data) => data._id),
+              labels: top5UnivData.map((data) => data._id),
               datasets: [
                 {
                   label: "Jumlah",
-                  data: univData.map((data) => data.count),
+                  data: top5UnivData.map((data) => data.count),
                   backgroundColor: [
                     "rgba(255, 99, 132, 0.2)",
                     "rgba(54, 162, 235, 0.2)",

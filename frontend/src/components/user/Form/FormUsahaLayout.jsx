@@ -10,6 +10,8 @@ const FormUsahaLayout = () => {
   const [pendAkhir, setPendAkhir] = useState('')
   const [tahunUsaha, setTahunUsaha] = useState('')
   const [alertt, setAlert] = useState('')
+  const [file, setFile] = useState('')
+  const [preview, setPreview] = useState('')
 
   const handleChangePendAkhir = (e) => {
     const value = e.target.value
@@ -41,6 +43,7 @@ const FormUsahaLayout = () => {
     setPendAkhir('')
     setTahunUsaha('')
     setUsaha('')
+    setPreview('')
   }
 
   const { userId } = useParams()
@@ -49,15 +52,26 @@ const FormUsahaLayout = () => {
   const handleClickKirm = async (e) => {
     e.preventDefault()
     try {
+
+      if (!file) {
+        setError("Harus menyertakan foto");
+        return
+      }
+
       const data = {
         pendidikan_akhir: pendAkhir,
         alamat_usaha: alamatUsaha,
         jenis_usaha: usaha,
-        tahun_usaha: tahunUsaha
+        tahun_usaha: tahunUsaha,
+        gambar: file
       }
-      const response = await api.post(`/usaha/${userId}`, data)
-      setAlert(response.data.message)
+      const response = await api.post(`/usaha/${userId}`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
       resetForm()
+      setAlert(response.data.message)
       setTimeout(() => {
         navigate('/user/profile')
       }, 2000);
@@ -71,6 +85,28 @@ const FormUsahaLayout = () => {
     }
   }
 
+  const loadImage = (e) => {
+      const image = e.target.files[0];
+    
+      if (!image) {
+        setError("Harap pilih file gambar.");
+        setFile('');
+        setPreview('');
+        return;
+      }
+      
+      const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+      if (!allowedExtensions.exec(image.name)) {
+        setError("Format file harus JPG, JPEG, atau PNG.");
+        setFile('');
+        setPreview('');
+        return;
+      }
+    
+      setFile(image);
+      setPreview(URL.createObjectURL(image));
+      setError('');
+  }
 
   return (
     <section className="relative">
@@ -111,11 +147,11 @@ const FormUsahaLayout = () => {
                 <label htmlFor="pendidikan" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Pendidikan Terakhir</label>
                 <select id="pendidikan" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" value={pendAkhir} onChange={handleChangePendAkhir}>
                   <option value="" >Pilih Pendidikan Terakhir</option>
-                  <option value="sma">SMA</option>
-                  <option value="d3">D3</option>
-                  <option value="s1">S1</option>
-                  <option value="s2">S2</option>
-                  <option value="s3">S3</option>
+                  <option value="SMA">SMA</option>
+                  <option value="D3">D3</option>
+                  <option value="S1">S1</option>
+                  <option value="S2">S2</option>
+                  <option value="S3">S3</option>
                 </select>
               </div>
               {/* Jenis Usaha */}
@@ -134,6 +170,20 @@ const FormUsahaLayout = () => {
                 <input type="number" name="tahun" id="tahun" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan Tahun Usaha (2019)" value={tahunUsaha} onChange={handleChangeTahunUsaha} required
                 />
               </div>
+              {/* upload foto */}
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-black" htmlFor="file_input">Upload Foto</label>
+                <input className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="file_input" type="file" onChange={loadImage} />
+                <p className="mt-1 text-sm text-gray-500 dark:text-red-500" id="file_input_help">PNG, JPG or JPEG.</p>
+              </div>
+              {/* Preview */}
+              {preview ? (
+                <figure className=''>
+                  <img src={preview} alt="preview image" />
+                </figure>
+              ) : (
+                ""
+              )}
               {/* {/* button regis */}
               <div className='flex gap-2'>
                 <button type='submit' className=" bg-gray-300  text-center

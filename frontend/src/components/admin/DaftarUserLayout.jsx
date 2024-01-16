@@ -4,6 +4,8 @@ import DataTable from "react-data-table-component";
 import FooterAdmin from "./FooterAdmin/FooterAdmin";
 import { Link } from "react-router-dom";
 import api from "../../api";
+import moment from 'moment';
+
 
 const DaftarUserLayout = () => {
   const [data, setData] = useState([]);
@@ -138,9 +140,13 @@ const DaftarUserLayout = () => {
 
   const readUser = async () => {
     try {
-      const response = await api.get("/users")
-      setData(response.data.data)
-      setFilter(response.data.data)
+      const response = await api.get("/users");
+      const dataUser = response.data.data.map((user) => ({
+        ...user,
+        tanggal_lahir: moment(user.tanggal_lahir).format("DD-MM-YYYY"),
+      }));
+      setData(dataUser);
+      setFilter(dataUser);
     } catch (error) {
       console.log(error)
     }

@@ -4,7 +4,7 @@ const kuliahSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-  },
+  }, 
   nama: {
     type: String,
     required: true,
@@ -24,6 +24,14 @@ const kuliahSchema = new mongoose.Schema({
   jenjang: {
     type: String,
     required: true,
+  },
+  gambar: {
+    type: String,
+    required: true, 
+  },
+  urlGambar: {
+    type: String, 
+    required: false,
   },
   jenis: {
     type: String,

@@ -1,7 +1,7 @@
 import { useState, React, useEffect } from "react";
 import SidebarAdmin from "./SidebarAdmin/SidebarAdmin";
 import DataTable from "react-data-table-component";
-import { Link, useNavigate } from "react-router-dom";
+import { Link} from "react-router-dom";
 import FooterAdmin from "./FooterAdmin/FooterAdmin";
 import api from "../../api"
 

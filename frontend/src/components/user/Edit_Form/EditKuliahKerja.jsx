@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import jb from '../../../images/logoJB.png'
 import api from "../../../api.js"
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import cookie from "js-cookies"
+import cookie from "js-cookie"
 
 const EditKuliahKerjaLayout = () => {
     const [jabatan, setJabatan] = useState('')
@@ -12,12 +12,32 @@ const EditKuliahKerjaLayout = () => {
     const [prodi, setProdi] = useState('')
     const [jenjang, setJenjang] = useState('')
     const [tahunKerja, setTahunKerja] = useState('')
+    const [file, setFile] = useState('')
+    const [preview, setPreview] = useState('')
+    const [filter, setFilter] = useState([]);
+    const [filteredUniversities, setFilteredUniversities] = useState([]);
+    const [showDropdown, setShowDropdown] = useState(true);
+    const [inputValue, setInputValue] = useState('');
 
     const handleChangeUniv = (e) => {
-        const value = e.target.value
-        setUniv(value)
-        setError('')
-    }
+        const value = e.target.value.toLowerCase();
+        setInputValue(value);
+
+        if (!value.trim()) {
+            setFilteredUniversities([]);
+            setShowDropdown(true);
+            return;
+        }
+
+        const filtered = filter.filter((university) =>
+            typeof university === 'string' && university.toLowerCase().includes(value)
+        );
+
+        const limitedFiltered = filtered.slice(0, 5);
+
+        setFilteredUniversities(limitedFiltered);
+        setShowDropdown(limitedFiltered.length > 0);
+    };
 
     const handleChangeJenjang = (e) => {
         const value = e.target.value
@@ -61,9 +81,14 @@ const EditKuliahKerjaLayout = () => {
                 tahun_kerja: tahunKerja,
                 nama_universitas: univ,
                 prodi: prodi,
-                jenjang: jenjang
+                jenjang: jenjang,
+                gambar: file
             }
-            const response = await api.put(`/kuliah-kerja/${userId}`, data)
+            const response = await api.put(`/kuliah-kerja/${userId}`, data, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            })
             alert(response.data.message)
             navigate('/user/profile')
         } catch (error) {
@@ -71,11 +96,11 @@ const EditKuliahKerjaLayout = () => {
         } finally {
             setTimeout(() => {
                 setError('')
-            }, 3000)
+            }, 5000)
         }
     }
 
-    const token = cookie.getItem('token')
+    const token = cookie.get('token')
 
     const readSingleKuliahKerja = async () => {
         try {
@@ -92,14 +117,56 @@ const EditKuliahKerjaLayout = () => {
             setUniv(dataKuliahKerja.nama_universitas)
             setProdi(dataKuliahKerja.prodi)
             setTahunKerja(dataKuliahKerja.tahun_kerja)
+            setPreview(dataKuliahKerja.urlGambar)
+            setFile(dataKuliahKerja.gambar)
+            setInputValue(dataKuliahKerja.nama_universitas)
+
         } catch (error) {
 
         }
     }
 
+    const loadImage = (e) => {
+        const image = e.target.files[0];
+
+        if (!image) {
+            setError("Harap pilih file gambar.");
+            setFile('');
+            setPreview('');
+            return;
+        }
+
+        const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+        if (!allowedExtensions.exec(image.name)) {
+            setError("Format file harus JPG, JPEG, atau PNG.");
+            setFile('');
+            setPreview('');
+            return;
+        }
+
+        setFile(image);
+        setPreview(URL.createObjectURL(image));
+        setError('');
+    }
+
+    const readUniv = async () => {
+        try {
+            const response = await api.get("/univ");
+            const univNames = response.data.data.map((university) => university.nama_universitas);
+            setFilter(univNames);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     useEffect(() => {
+        readUniv();
         readSingleKuliahKerja()
     }, [])
+
+    useEffect(() => {
+        setInputValue(univ);
+    }, [univ]);
 
 
     return (
@@ -128,15 +195,25 @@ const EditKuliahKerjaLayout = () => {
                             Edit Data Kuliah & Kerja
                         </h1>
                         <form className="space-y-4 md:space-y-6" action="#">
-                            {/* Nama Perusahaan */}
+                            {/* Kategori Pekerjaan */}
                             <div>
-                                <label htmlFor="perusahaan" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Nama Perusahaan</label>
-                                <input type="text" name="perusahaan" id="perusahaan" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan Nama Perusahaan" value={perusahaan} onChange={handleChangePerusahaan} required />
+                                <label htmlFor="pekerjaan" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Kategori Pekerjaan</label>
+                                <select id="pekerjaan" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" value={perusahaan} onChange={handleChangePerusahaan}>
+                                    <option value="" >Pilih Kategori Pekerjaan</option>
+                                    <option value="Aparatur/Pejabat Negara">APARATUR/PEJABAT NEGARA</option>
+                                    <option value="Tenaga Pengajar">TENAGA PENGAJAR</option>
+                                    <option value="Wiraswasta">WIRASWASTA</option>
+                                    <option value="Pertanian/Peternakan">PERTANIAN/PETERNAKAN</option>
+                                    <option value="Nelayan">NELAYAN</option>
+                                    <option value="Agama dan Kepercayaan">AGAMA DAN KEPERCAYAAN</option>
+                                    <option value="Tenaga Kesehatan">TENAGA KESEHATAN</option>
+                                    <option value="Lainnya">LAINNYA</option>
+                                </select>
                             </div>
-                            {/* jabatan */}
+                            {/* Sub Pekerjaan */}
                             <div>
-                                <label htmlFor="jabatan" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Jabatan</label>
-                                <input type="text" name="jabatan" id="jabatan" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan Jabatan" value={jabatan} onChange={handleChangeJabatan} required />
+                                <label htmlFor="jabatan" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Jenis Pekerjaan</label>
+                                <input type="text" name="jabatan" id="jabatan" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan Jabatan" value={jabatan} onChange={handleChangeJabatan} />
                             </div>
                             {/* Kapan kerja */}
                             <div>
@@ -147,7 +224,33 @@ const EditKuliahKerjaLayout = () => {
                             {/* Universitas */}
                             <div>
                                 <label htmlFor="univ" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Nama Universitas</label>
-                                <input type="text" name="univ" id="univ" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Masukan Nama Universitas" value={univ} onChange={handleChangeUniv} required />
+                                <input
+                                    type="text"
+                                    name="univ"
+                                    id="univ"
+                                    autoComplete="off"
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Masukan Nama Universitas"
+                                    value={inputValue}  // Pastikan nilai inputValue disetel di sini
+                                    onChange={handleChangeUniv}
+                                    required
+                                />
+                                {showDropdown && filteredUniversities.length > 0 && (
+                                    <ul className="mt-1 border border-gray-300 rounded-lg absolute bg-white max-h-28 overflow-y-auto">
+                                        {filteredUniversities.map((university, index) => (
+                                            <li
+                                                key={index}
+                                                className="cursor-pointer p-2 hover:bg-gray-200"
+                                                onClick={() => {
+                                                    setUniv(university);
+                                                    setShowDropdown(false);
+                                                }}
+                                            >
+                                                {university}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
                             </div>
                             {/* Prodi */}
                             <div>
@@ -159,12 +262,26 @@ const EditKuliahKerjaLayout = () => {
                                 <label htmlFor="jurusan" className="block mb-2 text-sm font-medium text-gray-900 dark:text-black">Jenjang</label>
                                 <select id="jurursan" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" value={jenjang} onChange={handleChangeJenjang}>
                                     <option value="" >Pilih Jenjang</option>
-                                    <option value="d3">D3</option>
-                                    <option value="s1">S1</option>
-                                    <option value="s2">S2</option>
-                                    <option value="s3">S3</option>
+                                    <option value="D3">D3</option>
+                                    <option value="S1">S1</option>
+                                    <option value="S2">S2</option>
+                                    <option value="S3">S3</option>
                                 </select>
                             </div>
+                            {/* upload foto */}
+                            <div>
+                                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-black" htmlFor="file_input">Upload Foto</label>
+                                <input className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="file_input" type="file" onChange={loadImage} />
+                                <p className="mt-1 text-sm text-gray-500 dark:text-red-600" id="file_input_help">PNG, JPG or JPEG.</p>
+                            </div>
+                            {/* Preview */}
+                            {preview ? (
+                                <figure className=''>
+                                    <img src={preview} alt="preview image" />
+                                </figure>
+                            ) : (
+                                ""
+                            )}
                             {/* {/* button regis */}
                             <div className='flex gap-2'>
                                 <button type='submit' className=" bg-gray-300  text-center

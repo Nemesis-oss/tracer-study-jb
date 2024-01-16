@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import jb from "../../images/logoJB.png"
 import { useNavigate } from "react-router-dom";
 import api from "../../api";
-import cookie from "js-cookies"
+import cookie from "js-cookie"
 
 const FormLogin = () => {
   const [username, setUsername] = useState("");
@@ -49,10 +49,13 @@ const FormLogin = () => {
     resetForm();
     try {
       const response = await api.post("/login", data);
+  console.log("Server Response:", response);
+
       if (response) {
-        const expirationTimeInSeconds = 3600;
-        cookie.setItem("token", response.data.token, expirationTimeInSeconds, { secure: true, httpOnly: true });
-        cookie.setItem("roles", response.data.role, expirationTimeInSeconds, { secure: true, httpOnly: true })
+        const expirationTimeInDays = 1; 
+
+        cookie.set("token", response.data.token, { expires: expirationTimeInDays });
+        cookie.set("roles", response.data.role, { expires: expirationTimeInDays })
         if (response.data.role === "user") {
           navigate("/user");
         } if (response.data.role === "admin") {
@@ -67,6 +70,8 @@ const FormLogin = () => {
       }, 5000)
     }
   };
+
+
 
   return (
     <section className="relative">
@@ -211,26 +216,7 @@ const FormLogin = () => {
               <div className="flex items-center justify-between">
                 {/* bagian atas remember me */}
                 <div className="flex items-start">
-                  {/* cek list (centang) remember me */}
-                  <div className="flex items-center h-5">
-                    <input
-                      id="remember"
-                      aria-describedby="remember"
-                      type="checkbox"
-                      className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                      onChange={handleRememberMe}
-                      checked={rememberMe}
-                    />
-                  </div>
-                  {/* tulisan remember me */}
-                  <div className="ml-3 text-sm">
-                    <label
-                      htmlFor="remember"
-                      className="text-gray-500 dark:text-gray-700"
-                    >
-                      Remember me
-                    </label>
-                  </div>
+
                 </div>
                 {/* tulisan forget password */}
                 <Link
